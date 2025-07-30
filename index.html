@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teachers Tool - Enhanced Educational Platform</title>
+    <title>Teachers Tool - Zambian Curriculum Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1186,15 +1186,6 @@
         .parents-table tr:hover {
             background-color: rgba(0, 102, 0, 0.05);
         }
-
-        .communication-btn {
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            background-color: var(--info);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
         
         .phone-link, .email-link {
             color: var(--primary);
@@ -1643,6 +1634,7 @@
                     <button class="sidebar-btn" data-section="lesson-planner"><i class="fas fa-calendar-alt"></i> Lesson Planner</button>
                     <button class="sidebar-btn" data-section="test-generator"><i class="fas fa-file-alt"></i> Test Generator</button>
                     <button class="sidebar-btn" data-section="timetable"><i class="fas fa-clock"></i> Timetable</button>
+                    <button class="sidebar-btn" data-section="parents"><i class="fas fa-users"></i> Parents</button>
                 </div>
 
                 <h2><i class="fas fa-history"></i> Recent Activities</h2>
@@ -1762,7 +1754,7 @@
                         
                         <div class="card">
                             <div class="card-content">
-                                <h3><i class="fas fa-lightbulb"></i> AI Suggestions</h3>
+                                <h3><i class="fas fa-lightbulb"></i> Resources</h3>
                                 <p>Recommended resources for upcoming lessons:</p>
                                 <ul>
                                     <li><i class="fas fa-link"></i> Interactive math games for algebra</li>
@@ -1782,7 +1774,7 @@
                 <section class="dashboard-section" id="lesson-planner">
                     <div class="section-header">
                         <h2><i class="fas fa-calendar-alt"></i> Lesson Plan Generator</h2>
-                        <p>Create comprehensive lesson plans for your classes with AI assistance.</p>
+                        <p>Create comprehensive lesson plans for your classes aligned with the Zambian curriculum.</p>
                     </div>
                     
                     <div class="lesson-planner-container">
@@ -1841,10 +1833,7 @@
                                 <textarea id="lesson-materials" class="form-control" rows="2" placeholder="List materials required"></textarea>
                             </div>
                             
-                            <div class="flex gap-2">
-                                <button class="btn btn-primary flex-1" id="generate-lesson-btn"><i class="fas fa-magic"></i> Generate</button>
-                                <button class="btn btn-info flex-1" id="ai-enhance-btn"><i class="fas fa-robot"></i> AI Enhance</button>
-                            </div>
+                            <button class="btn btn-primary w-100" id="generate-lesson-btn"><i class="fas fa-magic"></i> Generate</button>
                             
                             <div class="mt-2">
                                 <button class="btn btn-outline w-100" id="save-template-btn"><i class="fas fa-save"></i> Save Template</button>
@@ -2018,6 +2007,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card-footer mt-3">
+                                <button class="btn btn-primary" id="download-attendance-summary"><i class="fas fa-download"></i> Download Summary PDF</button>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -2120,9 +2112,10 @@
                                 <input type="number" id="question-count" min="5" max="50" value="10" class="form-control">
                             </div>
                             
-                            <div class="flex gap-2">
-                                <button class="btn btn-primary flex-1" id="generate-test-btn"><i class="fas fa-magic"></i> Generate Test</button>
-                                <button class="btn btn-info flex-1" id="ai-enhance-test-btn"><i class="fas fa-robot"></i> AI Enhance</button>
+                            <button class="btn btn-primary w-100" id="generate-test-btn"><i class="fas fa-magic"></i> Generate Test</button>
+                            
+                            <div class="mt-3">
+                                <button class="btn btn-outline w-100" id="add-question-btn"><i class="fas fa-plus-circle"></i> Add Question to Bank</button>
                             </div>
                         </div>
                         
@@ -2165,7 +2158,6 @@
                                     <th>Relationship</th>
                                     <th>Phone</th>
                                     <th>Email</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="parents-list">
@@ -2175,7 +2167,6 @@
                                     <td>Mother</td>
                                     <td><a href="tel:+260971234567" class="phone-link">+260 97 123 4567</a></td>
                                     <td><a href="mailto:esther@example.com" class="email-link">esther@example.com</a></td>
-                                    <td><button class="communication-btn" data-email="esther@example.com" data-phone="+260971234567"><i class="fas fa-envelope"></i> Message</button></td>
                                 </tr>
                                 <tr>
                                     <td>Joseph Mwale</td>
@@ -2183,7 +2174,6 @@
                                     <td>Father</td>
                                     <td><a href="tel:+260969876543" class="phone-link">+260 96 987 6543</a></td>
                                     <td><a href="mailto:joseph@example.com" class="email-link">joseph@example.com</a></td>
-                                    <td><button class="communication-btn" data-email="joseph@example.com" data-phone="+260969876543"><i class="fas fa-envelope"></i> Message</button></td>
                                 </tr>
                                 <tr>
                                     <td>Grace Chomba</td>
@@ -2191,7 +2181,6 @@
                                     <td>Mother</td>
                                     <td><a href="tel:+260975551234" class="phone-link">+260 97 555 1234</a></td>
                                     <td><a href="mailto:grace@example.com" class="email-link">grace@example.com</a></td>
-                                    <td><button class="communication-btn" data-email="grace@example.com" data-phone="+260975551234"><i class="fas fa-envelope"></i> Message</button></td>
                                 </tr>
                                 <tr>
                                     <td>Peter Lungu</td>
@@ -2199,7 +2188,6 @@
                                     <td>Father</td>
                                     <td><a href="tel:+260967778888" class="phone-link">+260 96 777 8888</a></td>
                                     <td><a href="mailto:peter@example.com" class="email-link">peter@example.com</a></td>
-                                    <td><button class="communication-btn" data-email="peter@example.com" data-phone="+260967778888"><i class="fas fa-envelope"></i> Message</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2389,7 +2377,7 @@
     <div class="modal" id="resources-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-lightbulb"></i> AI Suggested Resources</h3>
+                <h3 class="modal-title"><i class="fas fa-lightbulb"></i> Suggested Resources</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
@@ -2454,34 +2442,37 @@
         </div>
     </div>
     
-    <!-- Communication Modal -->
-    <div class="modal" id="communication-modal">
+    <!-- Report Form Modal -->
+    <div class="modal" id="report-form-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title"><i class="fas fa-comments"></i> Contact Parent</h3>
+                <h3 class="modal-title"><i class="fas fa-file-pdf"></i> Generate Report Form</h3>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label for="parent-email">To:</label>
-                    <input type="text" id="comms-email" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="parent-phone">Phone:</label>
-                    <input type="text" id="comms-phone" class="form-control" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="message-subject">Subject:</label>
-                    <input type="text" id="message-subject" class="form-control" placeholder="Subject">
-                </div>
-                <div class="form-group">
-                    <label for="message-content">Message:</label>
-                    <textarea id="message-content" class="form-control" rows="5" placeholder="Type your message here..."></textarea>
-                </div>
-                <div class="flex gap-2 mt-3">
-                    <button class="btn btn-primary flex-1" id="send-email-btn"><i class="fas fa-envelope"></i> Send Email</button>
-                    <button class="btn btn-success flex-1" id="call-parent-btn"><i class="fas fa-phone"></i> Call Now</button>
-                </div>
+                <form id="report-form">
+                    <div class="form-group">
+                        <label for="school-name">School Name:</label>
+                        <input type="text" id="school-name" class="form-control" value="Agape Academy" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="student-name-report">Student Name:</label>
+                        <input type="text" id="student-name-report" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="grade-level">Grade Level:</label>
+                        <input type="text" id="grade-level" class="form-control" value="Grade 3" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="term">Term:</label>
+                        <input type="text" id="term" class="form-control" value="Term 2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacher-comments">Teacher Comments:</label>
+                        <textarea id="teacher-comments" class="form-control" rows="4" placeholder="Enter your comments"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100" id="generate-report-btn"><i class="fas fa-download"></i> Generate Report PDF</button>
+                </form>
             </div>
         </div>
     </div>
@@ -2533,6 +2524,41 @@
         </div>
     </div>
 
+    <!-- Add Question Modal -->
+    <div class="modal" id="add-question-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fas fa-plus-circle"></i> Add Question to Bank</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-question-form">
+                    <div class="form-group">
+                        <label for="question-subject">Subject:</label>
+                        <select id="question-subject" class="form-control">
+                            <option value="math">Mathematics</option>
+                            <option value="english">English</option>
+                            <option value="science">Science</option>
+                            <option value="cinyanja">Cinyanja</option>
+                            <option value="history">History</option>
+                            <option value="geography">Geography</option>
+                            <option value="art">Art</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="question-text">Question:</label>
+                        <textarea id="question-text" class="form-control" rows="3" placeholder="Enter the question" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="question-answer">Answer:</label>
+                        <textarea id="question-answer" class="form-control" rows="3" placeholder="Enter the answer" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Question</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Data definitions
         const zambianNames = [
@@ -2559,12 +2585,7 @@
                 { q: "If 5 pencils cost 25 kwacha, how much do 8 pencils cost?", a: "40 kwacha" },
                 { q: "What is 15% of 200?", a: "30" },
                 { q: "Simplify 3/6 to its lowest terms", a: "1/2" },
-                { q: "Add 2/3 + 1/4", a: "11/12" },
-                { q: "If a bag of mealie meal costs 150 Kwacha, and you buy 3 bags, how much do you spend?", a: "450 Kwacha" },
-                { q: "Calculate the area of a maize field that is 20m long and 15m wide.", a: "300m²" },
-                { q: "If 5 students share 25 exercise books equally, how many books does each get?", a: "5 books" },
-                { q: "Convert 3.5 hours to minutes.", a: "210 minutes" },
-                { q: "What is the perimeter of a rectangular classroom that is 10m by 8m?", a: "36m" }
+                { q: "Add 2/3 + 1/4", a: "11/12" }
             ],
             english: [
                 { q: "Identify the verb in this sentence: 'The dog chased the cat.'", a: "chased" },
@@ -2576,12 +2597,7 @@
                 { q: "What is the opposite of 'ancient'?", a: "modern" },
                 { q: "Identify the subject in: 'After school, the children played football.'", a: "the children" },
                 { q: "Change to passive voice: 'The teacher praised the student.'", a: "The student was praised by the teacher." },
-                { q: "What is the comparative form of 'good'?", a: "better" },
-                { q: "Complete the sentence: 'The Zambezi River ____ through Zambia.'", a: "flows" },
-                { q: "Give the plural form of 'child' as used in Zambian English.", a: "children" },
-                { q: "What is the opposite of 'wealthy'?", a: "poor" },
-                { q: "Identify the verb: 'The teacher taught the students about Zambian history.'", a: "taught" },
-                { q: "Form a question: 'They are going to the market.'", a: "Are they going to the market?" }
+                { q: "What is the comparative form of 'good'?", a: "better" }
             ],
             science: [
                 { q: "What gas do plants absorb during photosynthesis?", a: "Carbon dioxide" },
@@ -2593,12 +2609,7 @@
                 { q: "What is the largest organ in the human body?", a: "Skin" },
                 { q: "What do we call an animal that eats both plants and meat?", a: "Omnivore" },
                 { q: "Which part of the plant makes food?", a: "Leaves" },
-                { q: "What gas do humans breathe out?", a: "Carbon dioxide" },
-                { q: "What gas do plants absorb during photosynthesis?", a: "Carbon dioxide" },
-                { q: "Name the three states of matter", a: "Solid, liquid, gas" },
-                { q: "Which planet is known as the Red Planet?", a: "Mars" },
-                { q: "What is the main function of the roots in a plant?", a: "Absorb water and nutrients" },
-                { q: "What force keeps us on the ground?", a: "Gravity" }
+                { q: "What gas do humans breathe out?", a: "Carbon dioxide" }
             ],
             cinyanja: [
                 { q: "What is 'hello' in Cinyanja?", a: "Moni" },
@@ -2848,39 +2859,19 @@
                     <td>${sanitizeInput(parent.relationship)}</td>
                     <td><a href="tel:${parent.phone}" class="phone-link">${sanitizeInput(parent.phone)}</a></td>
                     <td><a href="mailto:${parent.email}" class="email-link">${sanitizeInput(parent.email)}</a></td>
-                    <td>
-                        <button class="communication-btn" data-email="${parent.email}" data-phone="${parent.phone}">
-                            <i class="fas fa-envelope"></i> Message
-                        </button>
-                    </td>
                 `;
                 parentsList.appendChild(row);
             });
-            
-            // Add event listeners to communication buttons
-            document.querySelectorAll('.communication-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const email = this.dataset.email;
-                    const phone = this.dataset.phone;
-                    
-                    document.getElementById('comms-email').value = email;
-                    document.getElementById('comms-phone').value = phone;
-                    document.getElementById('message-subject').value = '';
-                    document.getElementById('message-content').value = '';
-                    
-                    openModal(document.getElementById('communication-modal'));
-                });
-            });
         }
         
-        function generateReport(studentName) {
+        function generateReport(studentName, schoolName, term, comments) {
             const subjects = ["Mathematics", "English", "Science", "Cinyanja", "History", "Art", "Music", "PE"];
             
             let reportHTML = `
                 <div class="report-content">
                     <div class="report-header">
-                        <h3>AGAPE ACADEMY</h3>
-                        <p>End of Term Report - Term 2, 2025</p>
+                        <h3>${schoolName}</h3>
+                        <p>End of Term Report - ${term}, 2025</p>
                     </div>
                     
                     <div class="report-section">
@@ -2891,7 +2882,7 @@
                                 <p><strong>Teacher:</strong> Mr. Phiri</p>
                             </div>
                             <div>
-                                <p><strong>Term:</strong> 2</p>
+                                <p><strong>Term:</strong> ${term}</p>
                                 <p><strong>Year:</strong> 2025</p>
                                 <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
                             </div>
@@ -2899,7 +2890,7 @@
                     </div>
                     
                     <div class="report-section">
-                        <h4>Academic Performance</h4>
+                        <h4><i class="fas fa-chart-line"></i> Academic Performance</h4>
                         <table class="grade-table">
                             <thead>
                                 <tr>
@@ -2951,13 +2942,13 @@
                     </div>
                     
                     <div class="report-section">
-                        <h4>Teacher's Comments</h4>
-                        <p>${studentName} has shown excellent progress this term. They have demonstrated a strong understanding of mathematical concepts and have improved their reading comprehension skills. ${studentName} participates actively in class discussions and collaborates well with peers. With continued effort, they will excel even further next term.</p>
+                        <h4><i class="fas fa-comment"></i> Teacher's Comments</h4>
+                        <p>${comments}</p>
                         <p class="mt-2"><strong>Signature:</strong> _________________________</p>
                     </div>
                     
                     <div class="report-section">
-                        <h4>Head Teacher's Remarks</h4>
+                        <h4><i class="fas fa-stamp"></i> Head Teacher's Remarks</h4>
                         <p>This report reflects consistent effort and achievement. Keep up the good work!</p>
                         <p class="mt-2"><strong>Signature:</strong> _________________________</p>
                     </div>
@@ -2967,14 +2958,14 @@
             return reportHTML;
         }
         
-        function downloadSingleReport(studentName) {
+        function downloadReportAsPDF(studentName, schoolName, term, comments) {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
             doc.setFontSize(18);
-            doc.text("AGAPE ACADEMY", 105, 20, null, null, 'center');
+            doc.text(schoolName, 105, 20, null, null, 'center');
             doc.setFontSize(14);
-            doc.text("Academic Report - Term 2, 2025", 105, 28, null, null, 'center');
+            doc.text(`Academic Report - ${term}, 2025`, 105, 28, null, null, 'center');
             
             doc.setFontSize(12);
             doc.text(`Student: ${studentName}`, 20, 45);
@@ -3025,20 +3016,22 @@
             doc.text("Teacher's Comments:", 20, y);
             doc.setFont(undefined, 'normal');
             y += 7;
-            doc.text(`${studentName} has shown excellent progress this term. They have demonstrated`, 20, y);
-            y += 7;
-            doc.text(`a strong understanding of mathematical concepts and have improved their`, 20, y);
-            y += 7;
-            doc.text(`reading comprehension skills. ${studentName} participates actively in class`, 20, y);
-            y += 7;
-            doc.text(`discussions and collaborates well with peers. With continued effort, they`, 20, y);
-            y += 7;
-            doc.text(`will excel even further next term.`, 20, y);
+            
+            // Split comments into lines that fit in the PDF
+            const splitComments = doc.splitTextToSize(comments, 170);
+            splitComments.forEach(line => {
+                if (y > 280) {
+                    doc.addPage();
+                    y = 20;
+                }
+                doc.text(line, 20, y);
+                y += 7;
+            });
             
             y += 15;
             doc.text("Signature: ___________________", 140, y);
             
-            doc.save(`Report_${studentName.replace(/\s+/g, '_')}.pdf`);
+            doc.save(`${studentName}_Report_${term}.pdf`);
             showToast(`Report downloaded for ${studentName}`);
         }
         
@@ -3070,7 +3063,8 @@
             document.querySelectorAll('.download-report-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const studentName = this.dataset.name;
-                    downloadSingleReport(studentName);
+                    document.getElementById('student-name-report').value = studentName;
+                    openModal(document.getElementById('report-form-modal'));
                 });
             });
         }
@@ -3144,6 +3138,12 @@
                     cell.addEventListener('click', function() {
                         if (isTimetableEditing) {
                             selectedCell = this;
+                            const classInfo = this.querySelector('.timetable-class');
+                            if (classInfo) {
+                                const parts = classInfo.textContent.split('\n');
+                                document.getElementById('timetable-class').value = parts[0] || '';
+                                document.getElementById('timetable-location').value = parts[1] || '';
+                            }
                             openModal(document.getElementById('edit-timetable-modal'));
                         }
                     });
@@ -3395,24 +3395,6 @@
                 showToast('Lesson plan generated with Zambian context!');
             });
 
-            // AI Enhance lesson button
-            document.getElementById('ai-enhance-btn').addEventListener('click', function() {
-                const subject = document.getElementById('lesson-subject').value;
-                const topic = document.getElementById('lesson-topic').value || "Fractions";
-                
-                const enhancements = [
-                    `Added Zambian context examples for ${topic} to make the lesson more relatable`,
-                    `Incorporated hands-on activities using locally available materials`,
-                    `Included differentiation strategies for diverse learners`,
-                    `Added group collaboration activities for peer learning`,
-                    `Integrated technology resources for interactive learning`,
-                    `Enhanced assessment methods with formative checks throughout the lesson`
-                ];
-                
-                const randomEnhancement = enhancements[Math.floor(Math.random() * enhancements.length)];
-                showToast(`AI Enhancement Applied: ${randomEnhancement}`);
-            });
-
             // Print lesson plan
             document.getElementById('print-lesson').addEventListener('click', function() {
                 const printContent = document.getElementById('lesson-preview-content').innerHTML;
@@ -3628,7 +3610,7 @@
                     showToast(`Generated ${zambianNames.length} report forms in ZIP file`);
                     // Create a ZIP file download link
                     const link = document.createElement('a');
-                    link.href = '#';
+                    link.href = '#'; // In a real app, this would be the ZIP file URL
                     link.download = 'grade_reports.zip';
                     link.click();
                 }, 2000);
@@ -3744,21 +3726,29 @@
                 showToast('Test saved successfully!');
             });
             
-            // AI Enhance test
-            document.getElementById('ai-enhance-test-btn').addEventListener('click', function() {
-                const subject = document.getElementById('test-subject').value;
-                const topic = document.getElementById('test-topic').value || "Fractions";
+            // Add question to bank
+            document.getElementById('add-question-btn').addEventListener('click', function() {
+                openModal(document.getElementById('add-question-modal'));
+            });
+            
+            // Submit new question form
+            document.getElementById('add-question-form').addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                const enhancements = [
-                    `Added Zambian context to test questions for ${topic}`,
-                    `Incorporated multiple question types (multiple choice, short answer, essay)`,
-                    `Added visual elements to support different learning styles`,
-                    `Included culturally relevant examples in questions`,
-                    `Enhanced questions to assess higher-order thinking skills`
-                ];
+                const subject = document.getElementById('question-subject').value;
+                const question = document.getElementById('question-text').value;
+                const answer = document.getElementById('question-answer').value;
                 
-                const randomEnhancement = enhancements[Math.floor(Math.random() * enhancements.length)];
-                showToast(`AI Enhancement Applied: ${randomEnhancement}`);
+                if (!questionBanks[subject]) {
+                    questionBanks[subject] = [];
+                }
+                
+                questionBanks[subject].push({ q: question, a: answer });
+                localStorage.setItem('questionBanks', JSON.stringify(questionBanks));
+                
+                showToast('Question added to bank successfully!');
+                closeModal(document.getElementById('add-question-modal'));
+                this.reset();
             });
             
             // Mark tasks as read when clicked
@@ -3879,20 +3869,17 @@
                 this.reset();
             });
             
-            // Communication functionality
-            document.getElementById('send-email-btn').addEventListener('click', function() {
-                const email = document.getElementById('comms-email').value;
-                const subject = encodeURIComponent(document.getElementById('message-subject').value);
-                const body = encodeURIComponent(document.getElementById('message-content').value);
+            // Report form functionality
+            document.getElementById('report-form').addEventListener('submit', function(e) {
+                e.preventDefault();
                 
-                window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-                closeModal(document.getElementById('communication-modal'));
-            });
-            
-            document.getElementById('call-parent-btn').addEventListener('click', function() {
-                const phone = document.getElementById('comms-phone').value;
-                window.location.href = `tel:${phone}`;
-                closeModal(document.getElementById('communication-modal'));
+                const studentName = document.getElementById('student-name-report').value;
+                const schoolName = document.getElementById('school-name').value;
+                const term = document.getElementById('term').value;
+                const comments = document.getElementById('teacher-comments').value;
+                
+                downloadReportAsPDF(studentName, schoolName, term, comments);
+                closeModal(document.getElementById('report-form-modal'));
             });
             
             // Timetable functionality
@@ -3951,6 +3938,42 @@
                     showToast('Timetable entry deleted');
                     closeModal(document.getElementById('edit-timetable-modal'));
                 }
+            });
+            
+            // Attendance summary download
+            document.getElementById('download-attendance-summary').addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                
+                doc.setFontSize(18);
+                doc.text("Attendance Summary", 105, 20, null, null, 'center');
+                
+                doc.setFontSize(12);
+                doc.text(`Date: ${document.getElementById('attendance-date').value}`, 20, 40);
+                
+                let y = 60;
+                doc.setFillColor(0, 102, 0);
+                doc.setTextColor(255, 255, 255);
+                doc.rect(20, y, 170, 10, 'F');
+                doc.text("Student", 30, y+7);
+                doc.text("Status", 150, y+7);
+                y += 10;
+                
+                doc.setTextColor(0, 0, 0);
+                
+                document.querySelectorAll('.student-item').forEach(item => {
+                    const name = item.querySelector('div:first-child').textContent;
+                    const status = item.querySelector('.toggle-btn.active').textContent;
+                    
+                    doc.rect(20, y, 170, 10);
+                    doc.text(name, 25, y+7);
+                    doc.text(status, 155, y+7);
+                    
+                    y += 10;
+                });
+                
+                doc.save(`attendance_summary_${document.getElementById('attendance-date').value}.pdf`);
+                showToast('Attendance summary downloaded as PDF');
             });
         }
 
@@ -4066,6 +4089,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             if (localStorage.getItem('theme') === 'dark') {
                 document.documentElement.classList.add('theme-dark');
+            }
+            
+            // Load question banks from localStorage if available
+            const savedQuestionBanks = localStorage.getItem('questionBanks');
+            if (savedQuestionBanks) {
+                Object.assign(questionBanks, JSON.parse(savedQuestionBanks));
             }
         });
     </script>
