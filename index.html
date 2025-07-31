@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGAPE EDUCATIONAL CENTRE - Marking Schedule</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --zambia-green: #198a00;
+            --zambia-red: #ce1126;
+            --zambia-black: #000000;
+            --zambia-orange: #ef7d00;
+            --light-bg: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e6f4ff 0%, #f0f9eb 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none"/><path d="M20,20 Q50,10 80,20 T100,50 Q80,80 50,100 T0,50 Q20,20 50,0 T100,50" fill="none" stroke="rgba(25,138,0,0.1)" stroke-width="1"/></svg>');
+            background-size: 120px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(to right, var(--zambia-green), var(--zambia-red));
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px 15px 0 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid white;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M28,28 Q50,10 72,28 T100,50 Q82,72 50,100 T0,50 Q18,28 50,10 T100,50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></svg>');
+            background-size: 120px;
+            opacity: 0.3;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 2.5rem;
+            color: var(--zambia-green);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 4px solid var(--zambia-orange);
+        }
+
+        .school-name {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            border: 2px solid var(--zambia-green);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: var(--zambia-black);
+            font-size: 1.1rem;
+        }
+
+        input, select, button {
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            font-size: 1.05rem;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--zambia-orange);
+            box-shadow: 0 0 0 4px rgba(239, 125, 0, 0.2);
+        }
+
+        button {
+            background: linear-gradient(to right, var(--zambia-green), var(--zambia-red));
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            height: 50px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .btn-download {
+            background: linear-gradient(to right, var(--zambia-orange), #e64a19);
+        }
+
+        .btn-add {
+            background: linear-gradient(to right, #2e7d32, #1b5e20);
+        }
+
+        .btn-print {
+            background: linear-gradient(to right, #1565c0, #0d47a1);
+        }
+
+        .marking-table-container {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            border: 2px solid var(--zambia-green);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        th {
+            background: linear-gradient(to bottom, var(--zambia-green), #0f7000);
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            font-size: 1.1rem;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        th:last-child {
+            border-right: none;
+        }
+
+        td {
+            padding: 16px 15px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9fdf5;
+        }
+
+        tr:hover {
+            background-color: #f1f8ff;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 90px;
+            padding: 10px 12px;
+            text-align: center;
+            font-size: 1.05rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            transition: var(--transition);
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: var(--zambia-orange);
+            box-shadow: 0 0 0 3px rgba(239, 125, 0, 0.2);
+        }
+
+        .position-cell {
+            font-weight: bold;
+            color: var(--zambia-orange);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .position-1 {
+            background-color: rgba(255, 215, 0, 0.25);
+            color: #c9a227;
+            font-weight: 900;
+        }
+
+        .position-2 {
+            background-color: rgba(192, 192, 192, 0.25);
+            color: #7d7d7d;
+            font-weight: 800;
+        }
+
+        .position-3 {
+            background-color: rgba(205, 127, 50, 0.25);
+            color: #a5712d;
+            font-weight: 800;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn-action {
+            padding: 8px 12px;
+            font-size: 1rem;
+            border-radius: 8px;
+            min-width: 40px;
+        }
+
+        .btn-remove {
+            background: linear-gradient(to right, #c62828, #b71c1c);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #555;
+            font-size: 1rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--zambia-orange);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, #e6f7ff, #f0ffe6);
+            padding: 16px 20px;
+            border-top: 2px solid #eee;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .stats-bar div span {
+            color: var(--zambia-green);
+            font-weight: 700;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: modalOpen 0.5s ease;
+        }
+
+        @keyframes modalOpen {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #777;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--zambia-red);
+            transform: rotate(90deg);
+        }
+
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--zambia-green);
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .subject-input {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subject-input label {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .school-name {
+                font-size: 2rem;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+            }
+            
+            .subject-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .flash {
+            animation: flash 0.5s;
+        }
+
+        @keyframes flash {
+            0% { background-color: transparent; }
+            50% { background-color: rgba(144, 238, 144, 0.5); }
+            100% { background-color: transparent; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">A</div>
+                <div>
+                    <h1 class="school-name">AGAPE EDUCATIONAL CENTRE</h1>
+                    <div class="subtitle">Zambia | Automated Marking Schedule System</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="term"><i class="fas fa-calendar-alt"></i> Academic Term</label>
+                <select id="term">
+                    <option value="term1">Term 1</option>
+                    <option value="term2">Term 2</option>
+                    <option value="term3">Term 3</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="grade"><i class="fas fa-graduation-cap"></i> Grade/Class</label>
+                <select id="grade">
+                    <option value="grade1">Grade 1</option>
+                    <option value="grade2">Grade 2</option>
+                    <option value="grade3">Grade 3</option>
+                    <option value="grade4">Grade 4</option>
+                    <option value="grade5">Grade 5</option>
+                    <option value="grade6">Grade 6</option>
+                    <option value="grade7">Grade 7</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label for="exam"><i class="fas fa-file-alt"></i> Examination</label>
+                <select id="exam">
+                    <option value="midterm">Mid-Term Examination</option>
+                    <option value="endterm">End of Term Examination</option>
+                    <option value="assignment">Major Assignment</option>
+                </select>
+            </div>
+            
+            <div class="input-group">
+                <label>&nbsp;</label>
+                <button class="btn-add" id="addStudent">
+                    <i class="fas fa-user-plus"></i> Add Student
+                </button>
+            </div>
+            
+            <div class="input-group">
+                <label>&nbsp;</label>
+                <button class="btn-download" id="downloadPdf">
+                    <i class="fas fa-download"></i> Download as PDF
+                </button>
+            </div>
+        </div>
+
+        <div class="marking-table-container">
+            <table id="markingTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student Name</th>
+                        <th>Maths</th>
+                        <th>Cinyanja</th>
+                        <th>Science</th>
+                        <th>English</th>
+                        <th>Social Studies</th>
+                        <th>CTS</th>
+                        <th>Total</th>
+                        <th>Position</th>
+                        <th class="actions-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Rows will be generated here -->
+                </tbody>
+            </table>
+            <div class="stats-bar" id="statsBar">
+                <div>Total Students: <span id="totalStudents">0</span></div>
+                <div>Class Average: <span id="classAverage">0</span>%</div>
+                <div>Highest Score: <span id="highestScore">0</span></div>
+                <div>Lowest Score: <span id="lowestScore">0</span></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>AGAPE EDUCATIONAL CENTRE &copy; 2023 | Zambia | Marking Schedule System v2.0</p>
+            <p><i class="fas fa-info-circle"></i> Note: Students with the same total marks share the same position</p>
+        </div>
+    </div>
+
+    <!-- Add Student Modal -->
+    <div class="modal" id="addStudentModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2><i class="fas fa-user-plus"></i> Add New Student</h2>
+            <form id="studentForm">
+                <div class="form-group">
+                    <label for="studentName"><i class="fas fa-user"></i> Student Full Name</label>
+                    <input type="text" id="studentName" placeholder="Enter student name" required>
+                </div>
+                
+                <div class="subject-grid">
+                    <div class="subject-input">
+                        <label for="maths">Maths</label>
+                        <input type="number" id="maths" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="cinyanja">Cinyanja</label>
+                        <input type="number" id="cinyanja" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="science">Science</label>
+                        <input type="number" id="science" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="english">English</label>
+                        <input type="number" id="english" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="social">Social Studies</label>
+                        <input type="number" id="social" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="cts">CTS</label>
+                        <input type="number" id="cts" min="0" max="100" placeholder="0-100">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-add btn-submit"><i class="fas fa-plus-circle"></i> Add Student</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableBody = document.getElementById('tableBody');
+            const addStudentBtn = document.getElementById('addStudent');
+            const downloadPdfBtn = document.getElementById('downloadPdf');
+            const closeModalBtn = document.getElementById('closeModal');
+            const studentForm = document.getElementById('studentForm');
+            const modal = document.getElementById('addStudentModal');
+            const totalStudentsSpan = document.getElementById('totalStudents');
+            const classAverageSpan = document.getElementById('classAverage');
+            const highestScoreSpan = document.getElementById('highestScore');
+            const lowestScoreSpan = document.getElementById('lowestScore');
+            
+            let studentCounter = 1;
+            const subjects = ['maths', 'cinyanja', 'science', 'english', 'social', 'cts'];
+            
+            // Add initial students
+            addStudentToTable('Manase Banda', [90, 85, 92, 88, 87, 91]);
+            addStudentToTable('Misheck Banda', [95, 90, 93, 92, 88, 94]);
+            addStudentToTable('Daliso Banda', [95, 90, 93, 92, 88, 94]);
+            addStudentToTable('Chanda Musonda', [82, 78, 85, 80, 79, 83]);
+            addStudentToTable('Zikomo Phiri', [75, 80, 77, 85, 76, 82]);
+            addStudentToTable('Grace Lungu', [88, 92, 85, 90, 87, 89]);
+            addStudentToTable('Peter Mwamba', [79, 84, 81, 76, 80, 85]);
+            
+            // Event listeners
+            addStudentBtn.addEventListener('click', () => {
+                modal.style.display = 'flex';
+            });
+            
+            closeModalBtn.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            studentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const studentName = document.getElementById('studentName').value;
+                
+                const marks = [];
+                subjects.forEach(subject => {
+                    const mark = parseInt(document.getElementById(subject).value) || 0;
+                    marks.push(mark);
+                });
+                
+                addStudentToTable(studentName, marks);
+                
+                // Reset form and close modal
+                studentForm.reset();
+                modal.style.display = 'none';
+            });
+            
+            downloadPdfBtn.addEventListener('click', generatePDF);
+            
+            // Add student to table
+            function addStudentToTable(name, marks) {
+                const row = document.createElement('tr');
+                const total = marks.reduce((sum, mark) => sum + mark, 0);
+                
+                // Serial number
+                const serialCell = document.createElement('td');
+                serialCell.textContent = studentCounter++;
+                row.appendChild(serialCell);
+                
+                // Student name
+                const nameCell = document.createElement('td');
+                nameCell.textContent = name;
+                row.appendChild(nameCell);
+                
+                // Subject marks (with input fields for editing)
+                marks.forEach(mark => {
+                    const subjectCell = document.createElement('td');
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '0';
+                    input.max = '100';
+                    input.value = mark;
+                    input.addEventListener('change', updateStudentStats);
+                    subjectCell.appendChild(input);
+                    row.appendChild(subjectCell);
+                });
+                
+                // Total
+                const totalCell = document.createElement('td');
+                totalCell.textContent = total;
+                totalCell.classList.add('total-cell');
+                row.appendChild(totalCell);
+                
+                // Position (initially empty - will be calculated later)
+                const positionCell = document.createElement('td');
+                positionCell.classList.add('position-cell');
+                row.appendChild(positionCell);
+                
+                // Actions
+                const actionsCell = document.createElement('td');
+                actionsCell.classList.add('actions');
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.classList.add('btn-action', 'btn-remove');
+                removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                removeBtn.addEventListener('click', () => {
+                    row.remove();
+                    updateStatistics();
+                });
+                
+                actionsCell.appendChild(removeBtn);
+                row.appendChild(actionsCell);
+                
+                tableBody.appendChild(row);
+                
+                // Update statistics and positions
+                updateStatistics();
+            }
+            
+            // Update student stats when marks are changed
+            function updateStudentStats() {
+                const row = this.parentElement.parentElement;
+                const markInputs = row.querySelectorAll('input[type="number"]');
+                
+                let total = 0;
+                markInputs.forEach(input => {
+                    total += parseInt(input.value) || 0;
+                });
+                
+                row.querySelector('.total-cell').textContent = total;
+                updateStatistics();
+            }
+            
+            // Update class statistics
+            function updateStatistics() {
+                const rows = tableBody.querySelectorAll('tr');
+                let totalStudents = rows.length;
+                let totalMarks = 0;
+                let highestScore = 0;
+                let lowestScore = totalStudents > 0 ? 1000 : 0; // Initialize with a high number
+                
+                // Calculate total marks and find highest/lowest scores
+                rows.forEach(row => {
+                    const total = parseInt(row.querySelector('.total-cell').textContent);
+                    totalMarks += total;
+                    
+                    if (total > highestScore) highestScore = total;
+                    if (total < lowestScore) lowestScore = total;
+                });
+                
+                // Calculate class average (as percentage)
+                const classAverage = totalStudents > 0 ? 
+                    ((totalMarks / (totalStudents * 600)) * 100).toFixed(2) : 0;
+                
+                // Update stats bar
+                totalStudentsSpan.textContent = totalStudents;
+                classAverageSpan.textContent = classAverage;
+                highestScoreSpan.textContent = highestScore;
+                lowestScoreSpan.textContent = totalStudents > 0 ? lowestScore : 0;
+                
+                // Calculate positions
+                calculatePositions();
+            }
+            
+            // Calculate student positions
+            function calculatePositions() {
+                const rows = Array.from(tableBody.querySelectorAll('tr'));
+                
+                // Sort students by total marks (descending)
+                rows.sort((a, b) => {
+                    const totalA = parseInt(a.querySelector('.total-cell').textContent);
+                    const totalB = parseInt(b.querySelector('.total-cell').textContent);
+                    return totalB - totalA;
+                });
+                
+                // Assign positions
+                let currentPosition = 1;
+                let previousTotal = -1;
+                let skip = 0;
+                
+                rows.forEach((row, index) => {
+                    const total = parseInt(row.querySelector('.total-cell').textContent);
+                    const positionCell = row.querySelector('.position-cell');
+                    
+                    // Reset position classes
+                    positionCell.className = 'position-cell';
+                    
+                    // Handle ties
+                    if (total === previousTotal) {
+                        skip++;
+                    } else {
+                        currentPosition += skip;
+                        skip = 1;
+                    }
+                    
+                    positionCell.textContent = currentPosition;
+                    
+                    // Apply special styling for top positions
+                    if (currentPosition === 1) {
+                        positionCell.classList.add('position-1');
+                    } else if (currentPosition === 2) {
+                        positionCell.classList.add('position-2');
+                    } else if (currentPosition === 3) {
+                        positionCell.classList.add('position-3');
+                    }
+                    
+                    previousTotal = total;
+                });
+            }
+            
+            // Generate PDF
+            function generatePDF() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('landscape');
+                
+                // Header information
+                const term = document.getElementById('term').options[document.getElementById('term').selectedIndex].text;
+                const grade = document.getElementById('grade').options[document.getElementById('grade').selectedIndex].text;
+                const exam = document.getElementById('exam').options[document.getElementById('exam').selectedIndex].text;
+                
+                // Title
+                doc.setFontSize(20);
+                doc.text('AGAPE EDUCATIONAL CENTRE', 105, 15, { align: 'center' });
+                doc.setFontSize(16);
+                doc.text('Marking Schedule', 105, 22, { align: 'center' });
+                
+                // Exam details
+                doc.setFontSize(12);
+                doc.text(`Term: ${term} | Grade: ${grade} | Exam: ${exam}`, 105, 30, { align: 'center' });
+                
+                // Table data
+                const tableRows = [];
+                const headerRow = ['#', 'Student Name', 'Maths', 'Cinyanja', 'Science', 'English', 'Social Studies', 'CTS', 'Total', 'Position'];
+                
+                // Get data from table
+                tableBody.querySelectorAll('tr').forEach(row => {
+                    const rowData = [];
+                    
+                    // Serial number
+                    rowData.push(row.cells[0].textContent);
+                    
+                    // Student name
+                    rowData.push(row.cells[1].textContent);
+                    
+                    // Subject marks
+                    for (let i = 2; i <= 7; i++) {
+                        const input = row.cells[i].querySelector('input');
+                        rowData.push(input ? input.value : '0');
+                    }
+                    
+                    // Total
+                    rowData.push(row.cells[8].textContent);
+                    
+                    // Position
+                    rowData.push(row.cells[9].textContent);
+                    
+                    tableRows.push(rowData);
+                });
+                
+                // Create table
+                doc.autoTable({
+                    head: [headerRow],
+                    body: tableRows,
+                    startY: 35,
+                    theme: 'grid',
+                    styles: { 
+                        fontSize: 10,
+                        cellPadding: 3,
+                        valign: 'middle',
+                        halign: 'center'
+                    },
+                    headStyles: {
+                        fillColor: [25, 138, 0],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [248, 253, 245]
+                    },
+                    didDrawPage: function(data) {
+                        // Footer
+                        doc.setFontSize(10);
+                        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, doc.internal.pageSize.height - 10);
+                        doc.text(`Total Students: ${totalStudentsSpan.textContent}`, 105, doc.internal.pageSize.height - 10, { align: 'center' });
+                        doc.text(`Class Average: ${classAverageSpan.textContent}%`, 280, doc.internal.pageSize.height - 10, { align: 'right' });
+                    }
+                });
+                
+                // Save the PDF
+                doc.save(`AGAPE-Marks-${term}-${grade}-${new Date().getTime()}.pdf`);
+            }
+        });
+    </script>
+</body>
+</html>
