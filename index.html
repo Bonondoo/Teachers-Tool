@@ -517,6 +517,8 @@
                         <th>English</th>
                         <th>Social Studies</th>
                         <th>CTS</th>
+                        <th>Special Paper 1</th>
+                        <th>Special Paper 2</th>
                         <th>Total</th>
                         <th>Position</th>
                         <th class="actions-header">Actions</th>
@@ -535,7 +537,7 @@
         </div>
 
         <div class="footer">
-            <p>AGAPE EDUCATIONAL CENTRE &copy; 2025 | Zambia | Marking Schedule System v2.0 created by Mr Phiri</p>
+            <p>AGAPE EDUCATIONAL CENTRE &copy; 2023 | Zambia | Marking Schedule System v2.0</p>
             <p><i class="fas fa-info-circle"></i> Note: Students with the same total marks share the same position</p>
         </div>
     </div>
@@ -581,6 +583,16 @@
                         <label for="cts">CTS</label>
                         <input type="number" id="cts" min="0" max="100" placeholder="0-100">
                     </div>
+                    
+                    <div class="subject-input">
+                        <label for="special1">Special Paper 1</label>
+                        <input type="number" id="special1" min="0" max="100" placeholder="0-100">
+                    </div>
+                    
+                    <div class="subject-input">
+                        <label for="special2">Special Paper 2</label>
+                        <input type="number" id="special2" min="0" max="100" placeholder="0-100">
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-add btn-submit"><i class="fas fa-plus-circle"></i> Add Student</button>
@@ -602,283 +614,414 @@
             const lowestScoreSpan = document.getElementById('lowestScore');
             
             let studentCounter = 1;
-            const subjects = ['maths', 'cinyanja', 'science', 'english', 'social', 'cts'];
+            const subjects = ['maths', 'cinyanja', 'science', 'english', 'social', 'cts', 'special1', 'special2'];
             
             // Add initial students
-            addStudentToTable('Manase Banda', [90, 85, 92, 88, 87, 91]);
-            addStudentToTable('Misheck Banda', [95, 90, 93, 92, 88, 94]);
-            addStudentToTable('Daliso Banda', [95, 90, 93, 92, 88, 94]);
-            addStudentToTable('Chanda Musonda', [82, 78, 85, 80, 79, 83]);
-            addStudentToTable('Zikomo Phiri', [75, 80, 77, 85, 76, 82]);
-            addStudentToTable('Grace Lungu', [88, 92, 85, 90, 87, 89]);
-            addStudentToTable('Peter Mwamba', [79, 84, 81, 76, 80, 85]);
+            addStudentToTable('Manase Banda', [90, 85, 92, 88, 87, 91, 88, 85]);
+            addStudentToTable('Misheck Banda', [95, 90, 93, 92, 88, 94, 90, 92]);
+            addStudentToTable('Daliso Banda', [95, 90, 93, 92, 88, 94, 92, 91]);
+            addStudentToTable('Chanda Musonda', [82, 78, 85, 80, 79, 83, 80, 78]);
+            addStudentToTable('Zikomo Phiri', [75, 80, 77, 85, 76, 82, 78, 80]);
+            addStudentToTable('Grace Lungu', [88, 92, 85, 90, 87, 89, 86, 90]);
+            addStudentToTable('Peter Mwamba', [79, 84, 81, 76, 80, 82, 77, 83]);
+            addStudentToTable('Esther Ngoma', [92, 88, 94, 90, 89, 93, 91, 89]);
+            addStudentToTable('David Kapata', [85, 80, 82, 87, 83, 88, 84, 82]);
+            addStudentToTable('Ruth Chisenga', [90, 85, 88, 92, 87, 90, 88, 86]);
+            addStudentToTable('Joseph Mwale', [78, 82, 80, 85, 79, 83, 81, 79]);
+            addStudentToTable('Miriam Tembo', [94, 89, 92, 95, 90, 93, 94, 92]);
+            addStudentToTable('Samuel Soko', [81, 85, 79, 83, 80, 82, 78, 81]);
+            addStudentToTable('Sarah Kunda', [87, 90, 85, 88, 86, 89, 87, 85]);
+            addStudentToTable('Daniel Banda', [83, 87, 81, 85, 82, 84, 80, 83]);
             
-            // Event listeners
-            addStudentBtn.addEventListener('click', () => {
-                modal.style.display = 'flex';
-            });
-            
-            closeModalBtn.addEventListener('click', () => {
-                modal.style.display = 'none';
-            });
-            
-            window.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-            
-            studentForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const studentName = document.getElementById('studentName').value;
-                
-                const marks = [];
-                subjects.forEach(subject => {
-                    const mark = parseInt(document.getElementById(subject).value) || 0;
-                    marks.push(mark);
-                });
-                
-                addStudentToTable(studentName, marks);
-                
-                // Reset form and close modal
-                studentForm.reset();
-                modal.style.display = 'none';
-            });
-            
-            downloadPdfBtn.addEventListener('click', generatePDF);
-            
-            // Add student to table
-            function addStudentToTable(name, marks) {
+            // Function to add student to table
+            function addStudentToTable(name, marks = []) {
+                const studentId = studentCounter++;
                 const row = document.createElement('tr');
-                const total = marks.reduce((sum, mark) => sum + mark, 0);
+                row.dataset.id = studentId;
                 
-                // Serial number
-                const serialCell = document.createElement('td');
-                serialCell.textContent = studentCounter++;
-                row.appendChild(serialCell);
+                // Number cell
+                const numberCell = document.createElement('td');
+                numberCell.textContent = studentId;
                 
-                // Student name
+                // Name cell
                 const nameCell = document.createElement('td');
                 nameCell.textContent = name;
-                row.appendChild(nameCell);
                 
-                // Subject marks (with input fields for editing)
-                marks.forEach(mark => {
-                    const subjectCell = document.createElement('td');
+                // Subject cells
+                const subjectCells = subjects.map((subject, index) => {
+                    const cell = document.createElement('td');
                     const input = document.createElement('input');
                     input.type = 'number';
                     input.min = '0';
                     input.max = '100';
-                    input.value = mark;
-                    input.addEventListener('change', updateStudentStats);
-                    subjectCell.appendChild(input);
-                    row.appendChild(subjectCell);
+                    input.value = marks[index] || '';
+                    input.placeholder = '0-100';
+                    input.dataset.subject = subject;
+                    input.addEventListener('input', function() {
+                        recalculateRow(row);
+                        recalculateAll();
+                    });
+                    cell.appendChild(input);
+                    return cell;
                 });
                 
-                // Total
+                // Total cell
                 const totalCell = document.createElement('td');
-                totalCell.textContent = total;
-                totalCell.classList.add('total-cell');
-                row.appendChild(totalCell);
+                totalCell.className = 'total-cell';
+                totalCell.textContent = '0';
                 
-                // Position (initially empty - will be calculated later)
+                // Position cell
                 const positionCell = document.createElement('td');
-                positionCell.classList.add('position-cell');
-                row.appendChild(positionCell);
+                positionCell.className = 'position-cell';
+                positionCell.textContent = '-';
                 
-                // Actions
+                // Actions cell
                 const actionsCell = document.createElement('td');
-                actionsCell.classList.add('actions');
-                
+                actionsCell.className = 'actions-cell';
                 const removeBtn = document.createElement('button');
-                removeBtn.classList.add('btn-action', 'btn-remove');
+                removeBtn.className = 'btn-action btn-remove';
                 removeBtn.innerHTML = '<i class="fas fa-trash"></i>';
-                removeBtn.addEventListener('click', () => {
-                    row.remove();
-                    updateStatistics();
-                });
-                
+                removeBtn.onclick = function() {
+                    row.classList.add('flash');
+                    setTimeout(() => {
+                        row.remove();
+                        recalculateAll();
+                    }, 500);
+                };
+                actionsCell.className = 'actions';
                 actionsCell.appendChild(removeBtn);
+                
+                // Build row
+                row.appendChild(numberCell);
+                row.appendChild(nameCell);
+                subjectCells.forEach(cell => row.appendChild(cell));
+                row.appendChild(totalCell);
+                row.appendChild(positionCell);
                 row.appendChild(actionsCell);
                 
                 tableBody.appendChild(row);
                 
-                // Update statistics and positions
-                updateStatistics();
+                // Calculate initial values
+                recalculateRow(row);
+                recalculateAll();
+                
+                return row;
             }
             
-            // Update student stats when marks are changed
-            function updateStudentStats() {
-                const row = this.parentElement.parentElement;
-                const markInputs = row.querySelectorAll('input[type="number"]');
-                
+            function recalculateRow(row) {
+                const inputs = row.querySelectorAll('input[type="number"]');
                 let total = 0;
-                markInputs.forEach(input => {
-                    total += parseInt(input.value) || 0;
+                let count = 0;
+                
+                inputs.forEach(input => {
+                    const value = parseInt(input.value) || 0;
+                    if (input.value !== '') {
+                        total += value;
+                        count++;
+                    }
                 });
                 
-                row.querySelector('.total-cell').textContent = total;
-                updateStatistics();
+                const totalCell = row.querySelector('.total-cell');
+                totalCell.textContent = total;
             }
             
-            // Update class statistics
-            function updateStatistics() {
+            function recalculateAll() {
                 const rows = tableBody.querySelectorAll('tr');
-                let totalStudents = rows.length;
-                let totalMarks = 0;
-                let highestScore = 0;
-                let lowestScore = totalStudents > 0 ? 1000 : 0; // Initialize with a high number
+                const studentData = [];
                 
-                // Calculate total marks and find highest/lowest scores
+                // Recalculate each row and collect data
                 rows.forEach(row => {
+                    recalculateRow(row);
                     const total = parseInt(row.querySelector('.total-cell').textContent);
-                    totalMarks += total;
-                    
-                    if (total > highestScore) highestScore = total;
-                    if (total < lowestScore) lowestScore = total;
+                    const name = row.querySelector('td:nth-child(2)').textContent;
+                    studentData.push({row, total, name});
                 });
                 
-                // Calculate class average (as percentage)
-                const classAverage = totalStudents > 0 ? 
-                    ((totalMarks / (totalStudents * 600)) * 100).toFixed(2) : 0;
+                // Sort by total marks (descending)
+                studentData.sort((a, b) => b.total - a.total);
                 
-                // Update stats bar
-                totalStudentsSpan.textContent = totalStudents;
-                classAverageSpan.textContent = classAverage;
-                highestScoreSpan.textContent = highestScore;
-                lowestScoreSpan.textContent = totalStudents > 0 ? lowestScore : 0;
-                
-                // Calculate positions
-                calculatePositions();
-            }
-            
-            // Calculate student positions
-            function calculatePositions() {
-                const rows = Array.from(tableBody.querySelectorAll('tr'));
-                
-                // Sort students by total marks (descending)
-                rows.sort((a, b) => {
-                    const totalA = parseInt(a.querySelector('.total-cell').textContent);
-                    const totalB = parseInt(b.querySelector('.total-cell').textContent);
-                    return totalB - totalA;
-                });
-                
-                // Assign positions
-                let currentPosition = 1;
-                let previousTotal = -1;
+                // Assign positions with ties
+                let position = 1;
+                let prevTotal = -1;
                 let skip = 0;
                 
-                rows.forEach((row, index) => {
-                    const total = parseInt(row.querySelector('.total-cell').textContent);
-                    const positionCell = row.querySelector('.position-cell');
-                    
-                    // Reset position classes
-                    positionCell.className = 'position-cell';
-                    
-                    // Handle ties
-                    if (total === previousTotal) {
+                studentData.forEach((student, index) => {
+                    if (student.total === prevTotal) {
                         skip++;
                     } else {
-                        currentPosition += skip;
+                        position += skip;
                         skip = 1;
                     }
                     
-                    positionCell.textContent = currentPosition;
+                    const positionCell = student.row.querySelector('.position-cell');
+                    positionCell.textContent = position;
+                    positionCell.className = 'position-cell';
                     
-                    // Apply special styling for top positions
-                    if (currentPosition === 1) {
+                    if (position === 1) {
                         positionCell.classList.add('position-1');
-                    } else if (currentPosition === 2) {
+                    } else if (position === 2) {
                         positionCell.classList.add('position-2');
-                    } else if (currentPosition === 3) {
+                    } else if (position === 3) {
                         positionCell.classList.add('position-3');
                     }
                     
-                    previousTotal = total;
+                    prevTotal = student.total;
                 });
+                
+                // Update statistics
+                updateStatistics();
             }
             
-            // Generate PDF
-            function generatePDF() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF('landscape');
+            function updateStatistics() {
+                const rows = tableBody.querySelectorAll('tr');
+                totalStudentsSpan.textContent = rows.length;
                 
-                // Header information
+                if (rows.length === 0) {
+                    classAverageSpan.textContent = '0';
+                    highestScoreSpan.textContent = '0';
+                    lowestScoreSpan.textContent = '0';
+                    return;
+                }
+                
+                let totalSum = 0;
+                let highest = -1;
+                let lowest = 1000;
+                let count = 0;
+                
+                rows.forEach(row => {
+                    const total = parseInt(row.querySelector('.total-cell').textContent);
+                    totalSum += total;
+                    count++;
+                    
+                    if (total > highest) highest = total;
+                    if (total < lowest) lowest = total;
+                });
+                
+                const average = totalSum / count;
+                classAverageSpan.textContent = average.toFixed(1);
+                highestScoreSpan.textContent = highest;
+                lowestScoreSpan.textContent = lowest;
+            }
+            
+            // Event listeners
+            addStudentBtn.addEventListener('click', function() {
+                modal.style.display = 'flex';
+            });
+            
+            closeModalBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+            
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            studentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('studentName').value;
+                const maths = document.getElementById('maths').value;
+                const cinyanja = document.getElementById('cinyanja').value;
+                const science = document.getElementById('science').value;
+                const english = document.getElementById('english').value;
+                const social = document.getElementById('social').value;
+                const cts = document.getElementById('cts').value;
+                const special1 = document.getElementById('special1').value;
+                const special2 = document.getElementById('special2').value;
+                
+                const newRow = addStudentToTable(name, [
+                    parseInt(maths) || 0,
+                    parseInt(cinyanja) || 0,
+                    parseInt(science) || 0,
+                    parseInt(english) || 0,
+                    parseInt(social) || 0,
+                    parseInt(cts) || 0,
+                    parseInt(special1) || 0,
+                    parseInt(special2) || 0
+                ]);
+                
+                newRow.classList.add('flash');
+                setTimeout(() => newRow.classList.remove('flash'), 1000);
+                
+                // Reset form
+                studentForm.reset();
+                modal.style.display = 'none';
+            });
+            
+            downloadPdfBtn.addEventListener('click', function() {
+                this.classList.add('pulse');
+                
+                setTimeout(() => {
+                    generatePDF();
+                    this.classList.remove('pulse');
+                }, 500);
+            });
+            
+            function generatePDF() {
+                // Create new PDF document
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'pt', 'a4');
+                
+                // Get exam details
                 const term = document.getElementById('term').options[document.getElementById('term').selectedIndex].text;
                 const grade = document.getElementById('grade').options[document.getElementById('grade').selectedIndex].text;
                 const exam = document.getElementById('exam').options[document.getElementById('exam').selectedIndex].text;
-                
-                // Title
-                doc.setFontSize(20);
-                doc.text('AGAPE EDUCATIONAL CENTRE', 105, 15, { align: 'center' });
-                doc.setFontSize(16);
-                doc.text('Marking Schedule', 105, 22, { align: 'center' });
-                
-                // Exam details
-                doc.setFontSize(12);
-                doc.text(`Term: ${term} | Grade: ${grade} | Exam: ${exam}`, 105, 30, { align: 'center' });
-                
-                // Table data
-                const tableRows = [];
-                const headerRow = ['#', 'Student Name', 'Maths', 'Cinyanja', 'Science', 'English', 'Social Studies', 'CTS', 'Total', 'Position'];
-                
-                // Get data from table
-                tableBody.querySelectorAll('tr').forEach(row => {
-                    const rowData = [];
-                    
-                    // Serial number
-                    rowData.push(row.cells[0].textContent);
-                    
-                    // Student name
-                    rowData.push(row.cells[1].textContent);
-                    
-                    // Subject marks
-                    for (let i = 2; i <= 7; i++) {
-                        const input = row.cells[i].querySelector('input');
-                        rowData.push(input ? input.value : '0');
-                    }
-                    
-                    // Total
-                    rowData.push(row.cells[8].textContent);
-                    
-                    // Position
-                    rowData.push(row.cells[9].textContent);
-                    
-                    tableRows.push(rowData);
+                const date = new Date().toLocaleDateString('en-GB', { 
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric' 
                 });
                 
-                // Create table
+                // Add header
+                doc.setFontSize(24);
+                doc.setTextColor(25, 138, 0); // Zambia green
+                doc.text('AGAPE EDUCATIONAL CENTRE', doc.internal.pageSize.getWidth() / 2, 50, { align: 'center' });
+                
+                doc.setFontSize(18);
+                doc.setTextColor(206, 17, 38); // Zambia red
+                doc.text('Official Marking Schedule', doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
+                
+                // Add exam details
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Term: ${term} | Class: ${grade} | Exam: ${exam} | Generated: ${date}`, 
+                         doc.internal.pageSize.getWidth() / 2, 110, { align: 'center' });
+                
+                // Prepare table data
+                const headers = [
+                    '#', 
+                    'Student Name', 
+                    'Maths', 
+                    'Cinyanja', 
+                    'Science', 
+                    'English', 
+                    'Social Studies', 
+                    'CTS', 
+                    'Special Paper 1',
+                    'Special Paper 2',
+                    'Total', 
+                    'Position'
+                ];
+                
+                const rows = [];
+                const tableRows = document.querySelectorAll('#tableBody tr');
+                
+                tableRows.forEach(row => {
+                    const rowData = [];
+                    // Get all cells except the last one (actions)
+                    const cells = row.querySelectorAll('td:not(.actions)');
+                    
+                    cells.forEach((cell, index) => {
+                        // For position cells, apply styling based on position
+                        if (index === headers.length - 1) {
+                            const position = cell.textContent;
+                            rowData.push({
+                                content: position,
+                                styles: getPositionStyle(position)
+                            });
+                        } else {
+                            rowData.push(cell.textContent);
+                        }
+                    });
+                    rows.push(rowData);
+                });
+                
+                // Add statistics
+                const totalStudents = document.getElementById('totalStudents').textContent;
+                const classAverage = document.getElementById('classAverage').textContent;
+                const highestScore = document.getElementById('highestScore').textContent;
+                const lowestScore = document.getElementById('lowestScore').textContent;
+                
+                // Generate the table
                 doc.autoTable({
-                    head: [headerRow],
-                    body: tableRows,
-                    startY: 35,
+                    head: [headers],
+                    body: rows,
+                    startY: 130,
                     theme: 'grid',
-                    styles: { 
+                    styles: {
+                        font: 'helvetica',
                         fontSize: 10,
-                        cellPadding: 3,
-                        valign: 'middle',
-                        halign: 'center'
+                        cellPadding: 6,
+                        overflow: 'linebreak'
                     },
                     headStyles: {
-                        fillColor: [25, 138, 0],
-                        textColor: 255,
-                        fontStyle: 'bold'
+                        fillColor: [25, 138, 0], // Zambia green
+                        textColor: [255, 255, 255],
+                        fontStyle: 'bold',
+                        halign: 'center'
                     },
-                    alternateRowStyles: {
-                        fillColor: [248, 253, 245]
+                    bodyStyles: {
+                        textColor: [0, 0, 0],
+                        halign: 'center'
                     },
-                    didDrawPage: function(data) {
-                        // Footer
-                        doc.setFontSize(10);
-                        doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, doc.internal.pageSize.height - 10);
-                        doc.text(`Total Students: ${totalStudentsSpan.textContent}`, 105, doc.internal.pageSize.height - 10, { align: 'center' });
-                        doc.text(`Class Average: ${classAverageSpan.textContent}%`, 280, doc.internal.pageSize.height - 10, { align: 'right' });
+                    columnStyles: {
+                        0: { cellWidth: 30 }, // #
+                        1: { cellWidth: 100 }, // Name
+                        11: { fontStyle: 'bold' } // Position (now index 11)
+                    },
+                    didDrawCell: function(data) {
+                        // Apply position styling
+                        if (data.section === 'body' && data.column.index === 11) {
+                            const position = data.cell.raw.content;
+                            const styles = data.cell.raw.styles;
+                            doc.setTextColor(styles.textColor[0], styles.textColor[1], styles.textColor[2]);
+                            doc.setFillColor(styles.fillColor[0], styles.fillColor[1], styles.fillColor[2]);
+                            doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F');
+                            doc.text(position, data.cell.x + data.cell.width / 2, data.cell.y + data.cell.height / 2 + 3, {
+                                align: 'center',
+                                baseline: 'middle'
+                            });
+                            return false; // Skip default rendering
+                        }
                     }
                 });
                 
+                // Add statistics below the table
+                const finalY = doc.autoTable.previous.finalY + 30;
+                
+                doc.setFontSize(12);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Total Students: ${totalStudents}`, 40, finalY);
+                doc.text(`Class Average: ${classAverage}%`, 180, finalY);
+                doc.text(`Highest Score: ${highestScore}`, 320, finalY);
+                doc.text(`Lowest Score: ${lowestScore}`, 460, finalY);
+                
+                // Add footer
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                doc.text('© AGAPE EDUCATIONAL CENTRE - Zambia', doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 20, { align: 'center' });
+                
                 // Save the PDF
-                doc.save(`AGAPE-Marks-${term}-${grade}-${new Date().getTime()}.pdf`);
+                doc.save(`AGAPE_Marking_Schedule_${new Date().toISOString().slice(0,10)}.pdf`);
             }
+            
+            function getPositionStyle(position) {
+                if (position === '1') {
+                    return {
+                        fillColor: [255, 215, 0], // Gold
+                        textColor: [201, 162, 39]
+                    };
+                } else if (position === '2') {
+                    return {
+                        fillColor: [192, 192, 192], // Silver
+                        textColor: [125, 125, 125]
+                    };
+                } else if (position === '3') {
+                    return {
+                        fillColor: [205, 127, 50], // Bronze
+                        textColor: [165, 113, 45]
+                    };
+                }
+                return {
+                    fillColor: [255, 255, 255],
+                    textColor: [0, 0, 0]
+                };
+            }
+            
+            // Initialize
+            recalculateAll();
         });
     </script>
 </body>
