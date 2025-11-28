@@ -3,2956 +3,1596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K Deli - BodaBoda Katete</title>
+    <title>K-DELI - Newtech Delivery Service</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #e74c3c;
-            --primary-dark: #c0392b;
-            --secondary: #2c3e50;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #2ecc71;
-            --warning: #f39c12;
-            --danger: #e74c3c;
-            --gray: #95a5a6;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
+            --primary: #4a6fa5;
+            --secondary: #166088;
+            --accent: #00a896;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --danger: #e63946;
+            --success: #2a9d8f;
+            --warning: #e9c46a;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            font-family: 'Poppins', sans-serif;
-            line-height: 1.6;
+            background-color: #f5f7fa;
             color: var(--dark);
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            line-height: 1.6;
         }
-
-        .app-container {
-            max-width: 480px;
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            min-height: 100vh;
-            box-shadow: var(--shadow);
-            position: relative;
-            overflow-x: hidden;
+            padding: 0 20px;
         }
-
+        
         /* Header Styles */
         header {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
-            color: white;
-            padding: 1.2rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: var(--shadow);
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
         }
-
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
-        .logo-icon {
-            background: var(--primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+        
+        .logo span {
+            color: var(--accent);
             font-weight: bold;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
         }
-
-        .logo-text {
-            font-weight: 700;
-            font-size: 1.4rem;
-        }
-
-        .logo-text span {
-            color: var(--primary);
-        }
-
-        .user-actions {
+        
+        nav ul {
             display: flex;
-            gap: 15px;
-        }
-
-        .icon-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: var(--primary);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Main Content */
-        .main-content {
-            padding: 1.5rem;
-            padding-bottom: 100px;
-        }
-
-        .welcome-section {
-            margin-bottom: 2rem;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .welcome-section h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .welcome-section p {
-            color: var(--gray);
-            font-size: 0.95rem;
-        }
-
-        /* Map Container */
-        .map-container {
-            height: 200px;
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-        }
-
-        #rideMap {
-            height: 100%;
-            width: 100%;
-        }
-
-        /* Ride Booking Card */
-        .booking-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.8rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            animation: slideUp 0.6s ease;
-            transition: var(--transition);
-        }
-
-        .booking-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-        }
-
-        .booking-card h3 {
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--secondary);
-        }
-
-        .booking-card h3 i {
-            color: var(--primary);
-        }
-
-        .input-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--secondary);
-            font-size: 0.9rem;
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        .input-with-icon i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray);
-        }
-
-        .input-with-icon input, .input-with-icon select {
-            width: 100%;
-            padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: var(--transition);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .input-with-icon input:focus, .input-with-icon select:focus {
-            border-color: var(--accent);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-
-        .location-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            z-index: 10;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
-        }
-
-        .location-suggestion {
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid #f0f0f0;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .location-suggestion:hover {
-            background: #f8f9fa;
-        }
-
-        .location-suggestion:last-child {
-            border-bottom: none;
-        }
-
-        .fare-display {
-            background: linear-gradient(135deg, #e8f4ff 0%, #f0f7ff 100%);
-            border-radius: 12px;
-            padding: 1.2rem;
-            margin: 1.5rem 0;
-            text-align: center;
-            border: 2px dashed var(--accent);
-            transition: var(--transition);
-        }
-
-        .fare-display:hover {
-            transform: scale(1.02);
-        }
-
-        .fare-display h4 {
-            color: var(--secondary);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .fare-amount {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .payment-options {
-            margin: 1.5rem 0;
-        }
-
-        .payment-options h4 {
-            margin-bottom: 1rem;
-            color: var(--secondary);
-            font-size: 1rem;
-        }
-
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .payment-method {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 1rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .payment-method:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .payment-method.active {
-            border-color: var(--primary);
-            background: rgba(231, 76, 60, 0.05);
-        }
-
-        .payment-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .cash .payment-icon {
-            color: var(--success);
-        }
-
-        .mtn .payment-icon {
-            color: #ffcc00;
-        }
-
-        .airtel .payment-icon {
-            color: #e60000;
-        }
-
-        .payment-method span {
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            padding: 1.2rem 2rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
-        }
-
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary:disabled {
-            background: #bdc3c7;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: var(--light);
-            color: var(--dark);
-            border: none;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-secondary:hover {
-            background: #dfe6e9;
-        }
-
-        /* Ride Status */
-        .ride-status {
-            background: white;
-            border-radius: 20px;
-            padding: 1.8rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            display: none;
-        }
-
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .status-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--success);
-            animation: pulse 1.5s infinite;
-        }
-
-        .status-timeline {
-            display: flex;
-            justify-content: space-between;
-            margin: 2rem 0;
-            position: relative;
-        }
-
-        .status-timeline::before {
-            content: '';
-            position: absolute;
-            top: 15px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #e0e0e0;
-            z-index: 1;
-        }
-
-        .timeline-step {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 2;
-            position: relative;
-        }
-
-        .timeline-icon {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #e0e0e0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-            color: white;
-        }
-
-        .timeline-step.active .timeline-icon {
-            background: var(--primary);
-        }
-
-        .timeline-step.completed .timeline-icon {
-            background: var(--success);
-        }
-
-        .timeline-label {
-            font-size: 0.8rem;
-            color: var(--gray);
-            text-align: center;
-        }
-
-        .timeline-step.active .timeline-label {
-            color: var(--primary);
-            font-weight: 500;
-        }
-
-        .timeline-step.completed .timeline-label {
-            color: var(--success);
-        }
-
-        .driver-assigned {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            background: var(--light);
-            padding: 1.2rem;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-        }
-
-        .driver-assigned-info h4 {
-            margin-bottom: 5px;
-        }
-
-        .driver-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 1rem;
-        }
-
-        /* Real-time Tracking */
-        .tracking-container {
-            margin: 1.5rem 0;
-        }
-
-        .tracking-map {
-            height: 150px;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .tracking-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .eta-display {
-            text-align: center;
-        }
-
-        .eta-label {
-            font-size: 0.8rem;
-            color: var(--gray);
-        }
-
-        .eta-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* Chat Interface */
-        .chat-container {
-            margin: 1.5rem 0;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .chat-header {
-            background: var(--light);
-            padding: 0.8rem 1rem;
-            font-weight: 500;
-        }
-
-        .chat-messages {
-            height: 200px;
-            overflow-y: auto;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 0.8rem 1rem;
-            border-radius: 18px;
-            font-size: 0.9rem;
-        }
-
-        .message.sent {
-            align-self: flex-end;
-            background: var(--primary);
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.received {
-            align-self: flex-start;
-            background: #f0f0f0;
-            color: var(--dark);
-            border-bottom-left-radius: 4px;
-        }
-
-        .chat-input {
-            display: flex;
-            padding: 0.8rem;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 0.8rem;
-            border: 1px solid #e0e0e0;
-            border-radius: 20px;
-            outline: none;
-        }
-
-        .chat-send {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-left: 10px;
-            cursor: pointer;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 1rem 0;
-            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
-            max-width: 480px;
-            margin: 0 auto;
-            z-index: 90;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--gray);
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
             text-decoration: none;
-            font-size: 0.8rem;
-            transition: var(--transition);
-            position: relative;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
-
-        .nav-item i {
-            font-size: 1.4rem;
-            margin-bottom: 4px;
-        }
-
-        .nav-item.active {
+        
+        nav a:hover {
             color: var(--primary);
+            background-color: rgba(74, 111, 165, 0.1);
         }
-
-        .nav-item:hover {
-            color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Modal Styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
+        
+        .auth-buttons {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: var(--transition);
-        }
-
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 400px;
-            transform: translateY(20px);
-            transition: var(--transition);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal.active .modal-content {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-header h3 {
-            color: var(--secondary);
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--gray);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .close-modal:hover {
-            color: var(--primary);
-            transform: rotate(90deg);
-        }
-
-        /* Rating Section */
-        .rating-section {
-            margin-top: 1.5rem;
-            display: none;
-        }
-
-        .stars {
-            display: flex;
-            justify-content: center;
             gap: 10px;
-            margin: 1rem 0;
         }
-
-        .star {
-            font-size: 2rem;
-            color: #e0e0e0;
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            transition: var(--transition);
+            font-weight: 500;
+            transition: all 0.3s;
         }
-
-        .star.active, .star:hover {
-            color: var(--warning);
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
         }
-
-        .review-text {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-family: 'Poppins', sans-serif;
-            resize: none;
-            margin: 1rem 0;
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
         }
-
-        /* Login Form */
-        .login-form {
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        /* Main Content */
+        main {
+            min-height: calc(100vh - 140px);
+            padding: 30px 0;
+        }
+        
+        /* Page Styles */
+        .page {
             display: none;
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        
+        .page.active {
+            display: block;
         }
-
+        
+        .page-title {
+            margin-bottom: 20px;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+        }
+        
+        /* Auth Forms */
+        .auth-form {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 5px;
             font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
             color: var(--secondary);
         }
-
-        .form-group input, .form-group select {
+        
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: var(--transition);
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--accent);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 1.5rem;
-        }
-
-        .form-footer a {
-            color: var(--accent);
-            text-decoration: none;
-        }
-
-        /* Driver Dashboard */
-        .driver-dashboard {
-            display: none;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
+            border-collapse: collapse;
             background: white;
-            border-radius: 16px;
-            padding: 1.2rem;
-            box-shadow: var(--shadow);
-            text-align: center;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
-
-        .stat-label {
-            color: var(--gray);
-            font-size: 0.9rem;
-        }
-
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .toggle-label {
+        
+        th {
+            background-color: var(--primary);
+            color: white;
             font-weight: 500;
         }
-
-        .toggle-switch {
-            position: relative;
+        
+        tr:hover {
+            background-color: rgba(74, 111, 165, 0.05);
+        }
+        
+        /* Status Badges */
+        .status-badge {
             display: inline-block;
-            width: 60px;
-            height: 34px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
         }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
+        
+        .status-pending {
+            background-color: rgba(233, 196, 106, 0.2);
+            color: #b38b00;
         }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
+        
+        .status-accepted {
+            background-color: rgba(42, 157, 143, 0.2);
+            color: var(--success);
         }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
+        
+        .status-onway {
+            background-color: rgba(74, 111, 165, 0.2);
+            color: var(--primary);
         }
-
-        input:checked + .slider {
-            background-color: var(--success);
+        
+        .status-delivered {
+            background-color: rgba(42, 157, 143, 0.2);
+            color: var(--success);
         }
-
-        input:checked + .slider:before {
-            transform: translateX(26px);
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
         }
-
-        /* Ride History */
-        .ride-history {
-            margin-top: 2rem;
-        }
-
-        .history-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 1rem;
-            transition: var(--transition);
-        }
-
-        .history-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-        }
-
-        .history-header {
+        
+        .footer-content {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 0.8rem;
+            gap: 15px;
         }
-
-        .history-route {
-            color: var(--gray);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
         }
-
-        .history-details {
-            display: flex;
-            justify-content: space-between;
-            color: var(--gray);
-            font-size: 0.85rem;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 480px) {
-            .app-container {
-                box-shadow: none;
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
             }
             
-            .payment-methods {
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .dashboard-cards {
                 grid-template-columns: 1fr;
             }
+            
+            .auth-buttons {
+                width: 100%;
+                justify-content: center;
+            }
         }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: var(--primary);
             border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
-
+        
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
-        /* Promotions */
-        .promo-banner {
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            color: var(--dark);
+        
+        .hidden {
+            display: none;
         }
-
-        .promo-code {
-            background: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            margin: 0.5rem 0;
-            display: inline-block;
+        
+        /* Alert Messages */
+        .alert {
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
-
-        /* Emergency Button */
-        .emergency-btn {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            background: var(--danger);
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
-            z-index: 80;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .emergency-btn:hover {
-            transform: scale(1.1);
-        }
-
-        .status-badge {
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .status-pending {
-            background: rgba(243, 156, 18, 0.1);
-            color: var(--warning);
-        }
-
-        .status-approved {
-            background: rgba(46, 204, 113, 0.1);
+        
+        .alert-success {
+            background-color: rgba(42, 157, 143, 0.2);
             color: var(--success);
+            border-left: 4px solid var(--success);
         }
-
-        .status-rejected {
-            background: rgba(231, 76, 60, 0.1);
+        
+        .alert-error {
+            background-color: rgba(230, 57, 70, 0.2);
             color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        /* Driver Registration */
+        .driver-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .photo-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        
+        .photo-upload:hover {
+            border-color: var(--primary);
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <div class="logo">
-                <div class="logo-icon">K</div>
-                <div class="logo-text">K <span>Deli</span></div>
-            </div>
-            <div class="user-actions">
-                <button class="icon-btn" id="notificationsBtn">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">0</span>
-                </button>
-                <button class="icon-btn" id="profileBtn">
-                    <i class="fas fa-user"></i>
-                </button>
-            </div>
-        </header>
-
-        <main class="main-content">
-            <!-- Passenger View -->
-            <div id="passengerView">
-                <section class="welcome-section">
-                    <h2 id="greeting">Welcome to K Deli Rides</h2>
-                    <p>Fast, safe and affordable boda-boda rides in Katete District</p>
-                </section>
-
-                <!-- Promotional Banner -->
-                <div class="promo-banner" id="promoBanner">
-                    <h4><i class="fas fa-gift"></i> Special Offer!</h4>
-                    <p>Get 20% off your first 5 rides with code</p>
-                    <div class="promo-code">WELCOME20</div>
-                    <small>Valid until December 31, 2024</small>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><span>Newtech</span> K-DELI</h1>
                 </div>
-
-                <!-- Map Container -->
-                <div class="map-container">
-                    <div id="rideMap"></div>
-                </div>
-
-                <section class="booking-card" id="bookingCard">
-                    <h3><i class="fas fa-map-marker-alt"></i> Book Your Ride</h3>
-                    
-                    <div class="input-group">
-                        <label for="pickup">Pickup Location</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-location-arrow"></i>
-                            <input type="text" id="pickup" placeholder="Enter pickup location" value="Katete Town Center">
-                            <div class="location-suggestions" id="pickupSuggestions"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="dropoff">Destination</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-flag"></i>
-                            <input type="text" id="dropoff" placeholder="Where to?" value="St. Francis Hospital">
-                            <div class="location-suggestions" id="dropoffSuggestions"></div>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="rideType">Ride Type</label>
-                        <div class="input-with-icon">
-                            <i class="fas fa-motorcycle"></i>
-                            <select id="rideType">
-                                <option value="standard">Standard Boda</option>
-                                <option value="premium">Premium Boda</option>
-                                <option value="delivery">Package Delivery</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="fare-display">
-                        <h4>Estimated Fare</h4>
-                        <div class="fare-amount" id="fareAmount">25 ZMW</div>
-                        <p id="fareDetails">Distance: 4.2 km • Time: 12 min</p>
-                    </div>
-
-                    <div class="payment-options">
-                        <h4>Payment Method</h4>
-                        <div class="payment-methods">
-                            <div class="payment-method cash active" data-method="cash">
-                                <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
-                                <span>Cash</span>
-                            </div>
-                            <div class="payment-method mtn" data-method="mtn">
-                                <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
-                                <span>MTN Money</span>
-                            </div>
-                            <div class="payment-method airtel" data-method="airtel">
-                                <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
-                                <span>Airtel Money</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button class="btn-primary" id="requestRideBtn">
-                        <i class="fas fa-motorcycle"></i> Request Ride
-                    </button>
-                </section>
-
-                <section class="ride-status" id="rideStatus">
-                    <div class="status-header">
-                        <div class="status-indicator">
-                            <div class="status-dot"></div>
-                            <h3 id="statusText">Looking for drivers...</h3>
-                        </div>
-                        <div id="timer">00:00</div>
-                    </div>
-
-                    <div class="status-timeline">
-                        <div class="timeline-step completed" id="step1">
-                            <div class="timeline-icon"><i class="fas fa-search"></i></div>
-                            <div class="timeline-label">Searching</div>
-                        </div>
-                        <div class="timeline-step active" id="step2">
-                            <div class="timeline-icon"><i class="fas fa-user-check"></i></div>
-                            <div class="timeline-label">Driver Assigned</div>
-                        </div>
-                        <div class="timeline-step" id="step3">
-                            <div class="timeline-icon"><i class="fas fa-road"></i></div>
-                            <div class="timeline-label">On the Way</div>
-                        </div>
-                        <div class="timeline-step" id="step4">
-                            <div class="timeline-icon"><i class="fas fa-flag-checkered"></i></div>
-                            <div class="timeline-label">Arrived</div>
-                        </div>
-                    </div>
-
-                    <!-- Real-time Tracking -->
-                    <div class="tracking-container">
-                        <div class="tracking-map" id="trackingMap"></div>
-                        <div class="tracking-info">
-                            <div class="eta-display">
-                                <div class="eta-label">Estimated Arrival</div>
-                                <div class="eta-value" id="etaValue">5 min</div>
-                            </div>
-                            <div class="driver-actions">
-                                <button class="btn-secondary" id="callDriverBtn">
-                                    <i class="fas fa-phone"></i> Call
-                                </button>
-                                <button class="btn-secondary" id="chatDriverBtn">
-                                    <i class="fas fa-comment"></i> Chat
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="driver-assigned" id="driverAssigned">
-                        <div class="driver-avatar">J</div>
-                        <div class="driver-assigned-info">
-                            <h4 id="driverName">John B.</h4>
-                            <div class="driver-rating">
-                                <i class="fas fa-star"></i> <span id="driverRating">4.8</span> (<span id="driverRides">127</span> rides)
-                            </div>
-                            <div class="driver-plate" id="driverPlate">ABC 1234</div>
-                        </div>
-                    </div>
-
-                    <!-- In-app Chat -->
-                    <div class="chat-container" id="chatContainer" style="display: none;">
-                        <div class="chat-header">Chat with <span id="chatDriverName">John B.</span></div>
-                        <div class="chat-messages" id="chatMessages">
-                            <!-- Messages will be loaded here -->
-                        </div>
-                        <div class="chat-input">
-                            <input type="text" id="chatInput" placeholder="Type your message...">
-                            <button class="chat-send" id="sendMessageBtn">
-                                <i class="fas fa-paper-plane"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="driver-actions">
-                        <button class="btn-secondary" id="cancelRideBtn">
-                            <i class="fas fa-times"></i> Cancel Ride
-                        </button>
-                        <button class="btn-secondary" id="shareRideBtn">
-                            <i class="fas fa-share-alt"></i> Share Ride
-                        </button>
-                    </div>
-                </section>
-
-                <section class="rating-section" id="ratingSection">
-                    <h3>Rate Your Ride</h3>
-                    <p>How was your experience with <span id="rateDriverName">John B.</span>?</p>
-                    
-                    <div class="stars">
-                        <div class="star" data-rating="1"><i class="fas fa-star"></i></div>
-                        <div class="star" data-rating="2"><i class="fas fa-star"></i></div>
-                        <div class="star" data-rating="3"><i class="fas fa-star"></i></div>
-                        <div class="star" data-rating="4"><i class="fas fa-star"></i></div>
-                        <div class="star" data-rating="5"><i class="fas fa-star"></i></div>
-                    </div>
-                    
-                    <textarea class="review-text" id="reviewText" placeholder="Optional: Share details about your experience..."></textarea>
-                    
-                    <button class="btn-primary" id="submitRatingBtn">
-                        Submit Rating
-                    </button>
-                </section>
-
-                <!-- Ride History -->
-                <section class="ride-history">
-                    <div class="section-header">
-                        <h3>Recent Rides</h3>
-                        <a href="#" class="see-all">View All</a>
-                    </div>
-                    <div id="rideHistoryList">
-                        <!-- Ride history will be populated by JavaScript -->
-                    </div>
-                </section>
-            </div>
-
-            <!-- Driver Dashboard -->
-            <div class="driver-dashboard" id="driverDashboard">
-                <section class="welcome-section">
-                    <h2 id="driverGreeting">Driver Dashboard</h2>
-                    <p>Manage your rides and earnings</p>
-                </section>
-
-                <div class="toggle-container">
-                    <span class="toggle-label">Available for Rides</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="availabilityToggle" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="todayEarnings">0 ZMW</div>
-                        <div class="stat-label">Today's Earnings</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalRides">0</div>
-                        <div class="stat-label">Total Rides</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="driverRatingValue">0.0</div>
-                        <div class="stat-label">Your Rating</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="onlineHours">0.0</div>
-                        <div class="stat-label">Online Hours</div>
-                    </div>
-                </div>
-
-                <!-- Driver Map -->
-                <div class="map-container">
-                    <div id="driverMap"></div>
-                </div>
-
-                <section class="ride-history">
-                    <h3>Today's Rides</h3>
-                    <div id="driverRideHistory">
-                        <!-- Ride history will be populated here -->
-                    </div>
-                </section>
-            </div>
-        </main>
-
-        <nav class="bottom-nav">
-            <a href="#" class="nav-item active" data-view="passenger">
-                <i class="fas fa-home"></i>
-                <span>Home</span>
-            </a>
-            <a href="#" class="nav-item" data-view="driver">
-                <i class="fas fa-motorcycle"></i>
-                <span>Driver</span>
-            </a>
-            <a href="#" class="nav-item" id="historyNav">
-                <i class="fas fa-history"></i>
-                <span>History</span>
-            </a>
-        </nav>
-
-        <!-- Emergency Button -->
-        <button class="emergency-btn" id="emergencyBtn">
-            <i class="fas fa-shield-alt"></i>
-        </button>
-    </div>
-
-    <!-- Login Modal -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Login to K Deli</h3>
-                <button class="close-modal">&times;</button>
-            </div>
-            <div class="login-form" id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" placeholder="Enter your password">
-                </div>
-                <div class="form-group">
-                    <label for="userRole">Login as</label>
-                    <select id="userRole">
-                        <option value="passenger">Passenger</option>
-                        <option value="driver">Driver</option>
-                    </select>
-                </div>
-                <button class="btn-primary" id="loginBtn">Login</button>
-                <div class="form-footer">
-                    <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
-                </div>
-            </div>
-            <div class="login-form" id="signupForm">
-                <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input type="text" id="fullName" placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label for="signupEmail">Email Address</label>
-                    <input type="email" id="signupEmail" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" placeholder="Create a password">
-                </div>
-                <div class="form-group">
-                    <label for="signupRole">Register as</label>
-                    <select id="signupRole">
-                        <option value="passenger">Passenger</option>
-                        <option value="driver">Driver</option>
-                    </select>
-                </div>
-                <div class="form-group" id="driverFields" style="display: none;">
-                    <label for="vehiclePlate">Vehicle Plate Number</label>
-                    <input type="text" id="vehiclePlate" placeholder="Enter vehicle plate">
-                    <label for="vehicleType">Vehicle Type</label>
-                    <select id="vehicleType">
-                        <option value="motorcycle">Motorcycle</option>
-                        <option value="tricycle">Tricycle</option>
-                    </select>
-                </div>
-                <button class="btn-primary" id="signupBtn">Create Account</button>
-                <div class="form-footer">
-                    <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+                <nav>
+                    <ul id="nav-links">
+                        <!-- Navigation links will be populated by JS based on user role -->
+                    </ul>
+                </nav>
+                <div class="auth-buttons" id="auth-buttons">
+                    <button class="btn btn-outline" id="login-btn">Login</button>
+                    <button class="btn btn-primary" id="signup-btn">Sign Up</button>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Profile Modal -->
-    <div class="modal" id="profileModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Your Profile</h3>
-                <button class="close-modal">&times;</button>
+    <main class="container">
+        <!-- Landing Page -->
+        <section id="landing-page" class="page active">
+            <div class="hero-section" style="text-align: center; padding: 60px 0;">
+                <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--secondary);">Fast & Reliable Delivery Service</h1>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; max-width: 700px; margin-left: auto; margin-right: auto;">
+                    K-DELI connects you with trusted drivers for all your delivery needs. Send packages, documents, and more with real-time tracking.
+                </p>
+                <button class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1rem;" id="get-started-btn">Get Started</button>
             </div>
-            <div class="driver-assigned" style="margin: 0 0 1.5rem 0;">
-                <div class="driver-avatar" id="profileAvatar">U</div>
-                <div class="driver-assigned-info">
-                    <h4 id="userName">User Name</h4>
-                    <p id="userEmail">Email: --</p>
-                    <p id="userRole">Role: --</p>
-                    <p id="userStatus" class="status-badge status-pending">Pending Approval</p>
+            
+            <div class="features" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 60px;">
+                <div class="feature-card" style="text-align: center; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <i class="fas fa-shipping-fast" style="font-size: 3rem; color: var(--accent); margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 15px;">Fast Delivery</h3>
+                    <p>Get your items delivered quickly with our network of verified drivers.</p>
+                </div>
+                <div class="feature-card" style="text-align: center; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 15px;">Real-time Tracking</h3>
+                    <p>Track your delivery in real-time from pickup to destination.</p>
+                </div>
+                <div class="feature-card" style="text-align: center; padding: 30px; background: white; border-radius: 8px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                    <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--success); margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 15px;">Secure & Safe</h3>
+                    <p>All our drivers are verified and insured for your peace of mind.</p>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="editName">Full Name</label>
-                <input type="text" id="editName" placeholder="Your full name">
-            </div>
-            <div class="form-group">
-                <label for="editEmail">Email Address</label>
-                <input type="email" id="editEmail" placeholder="Your email address">
-            </div>
-            <button class="btn-primary" id="saveProfileBtn">Save Changes</button>
-            <button class="btn-secondary" style="margin-top: 1rem;" id="logoutBtn">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
-        </div>
-    </div>
+        </section>
 
-    <!-- Notifications Modal -->
-    <div class="modal" id="notificationsModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Notifications</h3>
-                <button class="close-modal">&times;</button>
+        <!-- Login Page -->
+        <section id="login-page" class="page">
+            <h2 class="page-title">Login to Your Account</h2>
+            <div class="auth-form">
+                <div id="login-alert" class="alert hidden"></div>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password">
+                </div>
+                <button class="btn btn-primary" id="login-submit" style="width: 100%;">Login</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    Don't have an account? <a href="#" id="go-to-signup" style="color: var(--primary);">Sign up here</a>
+                </p>
+                <p style="text-align: center; margin-top: 10px;">
+                    <a href="#" id="go-to-driver-register" style="color: var(--primary);">Register as a driver</a>
+                </p>
             </div>
-            <div id="notificationsList">
-                <!-- Notifications will be populated here -->
+        </section>
+
+        <!-- Signup Page -->
+        <section id="signup-page" class="page">
+            <h2 class="page-title">Create New Account</h2>
+            <div class="auth-form">
+                <div id="signup-alert" class="alert hidden"></div>
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" class="form-control" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" class="form-control" placeholder="Create a password">
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm-password">Confirm Password</label>
+                    <input type="password" id="signup-confirm-password" class="form-control" placeholder="Confirm your password">
+                </div>
+                <button class="btn btn-primary" id="signup-submit" style="width: 100%;">Sign Up</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    Already have an account? <a href="#" id="go-to-login" style="color: var(--primary);">Login here</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- Driver Registration Page -->
+        <section id="driver-register-page" class="page">
+            <h2 class="page-title">Register as a Driver</h2>
+            <div class="driver-form">
+                <div id="driver-register-alert" class="alert hidden"></div>
+                <div class="form-group">
+                    <label for="driver-name">Full Name</label>
+                    <input type="text" id="driver-name" class="form-control" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="driver-phone">Phone Number</label>
+                    <input type="tel" id="driver-phone" class="form-control" placeholder="Enter your phone number">
+                </div>
+                <div class="form-group">
+                    <label for="driver-bike">Bike Details</label>
+                    <input type="text" id="driver-bike" class="form-control" placeholder="Enter bike model and details">
+                </div>
+                <div class="form-group">
+                    <label>Upload Photo</label>
+                    <div class="photo-upload" id="photo-upload-area">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #ddd; margin-bottom: 10px;"></i>
+                        <p>Click to upload your photo</p>
+                        <input type="file" id="driver-photo" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                <button class="btn btn-primary" id="driver-register-submit" style="width: 100%;">Register as Driver</button>
+                <p style="text-align: center; margin-top: 15px;">
+                    Already have an account? <a href="#" id="go-to-login-from-driver" style="color: var(--primary);">Login here</a>
+                </p>
+            </div>
+        </section>
+
+        <!-- User Dashboard -->
+        <section id="user-dashboard" class="page">
+            <h2 class="page-title">User Dashboard</h2>
+            
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Create New Delivery</h3>
+                        <i class="fas fa-plus-circle" style="color: var(--accent); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>Request a new delivery with our easy-to-use form.</p>
+                    <button class="btn btn-primary" id="create-delivery-btn" style="margin-top: 15px; width: 100%;">Create Delivery</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Deliveries</h3>
+                        <i class="fas fa-clipboard-list" style="color: var(--primary); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>Track your current and past delivery requests.</p>
+                    <button class="btn btn-outline" id="view-my-trips-btn" style="margin-top: 15px; width: 100%;">View My Trips</button>
+                </div>
+            </div>
+            
+            <!-- Create Delivery Form -->
+            <div id="create-delivery-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Create Delivery Request</h3>
+                <div class="card">
+                    <div class="form-group">
+                        <label for="item-name">Item Name</label>
+                        <input type="text" id="item-name" class="form-control" placeholder="What are you sending?">
+                    </div>
+                    <div class="form-group">
+                        <label for="pickup-location">Pickup Location</label>
+                        <input type="text" id="pickup-location" class="form-control" placeholder="Where should we pick up from?">
+                    </div>
+                    <div class="form-group">
+                        <label for="destination">Destination</label>
+                        <input type="text" id="destination" class="form-control" placeholder="Where should we deliver to?">
+                    </div>
+                    <div class="form-group">
+                        <label for="distance">Distance (km)</label>
+                        <input type="number" id="distance" class="form-control" placeholder="Enter distance in kilometers" min="0" step="0.1">
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Special Notes</label>
+                        <textarea id="notes" class="form-control" rows="3" placeholder="Any special instructions?"></textarea>
+                    </div>
+                    <div id="price-calculation" style="padding: 15px; background: #f8f9fa; border-radius: 4px; margin-bottom: 15px; display: none;">
+                        <p><strong>Estimated Price: $<span id="calculated-price">0.00</span></strong></p>
+                    </div>
+                    <button class="btn btn-primary" id="submit-delivery-btn">Submit Delivery Request</button>
+                    <button class="btn btn-outline" id="cancel-delivery-btn" style="margin-left: 10px;">Cancel</button>
+                </div>
+            </div>
+            
+            <!-- My Trips Section -->
+            <div id="my-trips-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">My Delivery Requests</h3>
+                <div class="table-container">
+                    <table id="user-trips-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Pickup</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Driver</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Trips will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Driver Dashboard -->
+        <section id="driver-dashboard" class="page">
+            <h2 class="page-title">Driver Dashboard</h2>
+            
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Available Trips</h3>
+                        <i class="fas fa-road" style="color: var(--accent); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>View and accept delivery requests from customers.</p>
+                    <button class="btn btn-primary" id="view-available-trips-btn" style="margin-top: 15px; width: 100%;">View Available Trips</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Earnings</h3>
+                        <i class="fas fa-money-bill-wave" style="color: var(--success); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>Track your completed deliveries and earnings.</p>
+                    <button class="btn btn-outline" id="view-earnings-btn" style="margin-top: 15px; width: 100%;">View Earnings</button>
+                </div>
+            </div>
+            
+            <!-- Available Trips Section -->
+            <div id="available-trips-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Available Delivery Requests</h3>
+                <div class="table-container">
+                    <table id="available-trips-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Pickup</th>
+                                <th>Destination</th>
+                                <th>Distance</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Available trips will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Earnings Section -->
+            <div id="earnings-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">My Earnings</h3>
+                <div class="card" style="margin-bottom: 20px;">
+                    <h4>Total Earnings: $<span id="total-earnings">0.00</span></h4>
+                    <p>Commission Rate: <span id="commission-rate">0</span>%</p>
+                </div>
+                <div class="table-container">
+                    <table id="driver-trips-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Pickup</th>
+                                <th>Destination</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Earnings</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Driver trips will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard -->
+        <section id="admin-dashboard" class="page">
+            <h2 class="page-title">Admin Dashboard</h2>
+            
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Driver Approvals</h3>
+                        <i class="fas fa-user-check" style="color: var(--accent); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>Review and approve driver registration requests.</p>
+                    <button class="btn btn-primary" id="manage-drivers-btn" style="margin-top: 15px; width: 100%;">Manage Drivers</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">System Settings</h3>
+                        <i class="fas fa-cog" style="color: var(--primary); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>Configure delivery pricing and commission rates.</p>
+                    <button class="btn btn-outline" id="manage-settings-btn" style="margin-top: 15px; width: 100%;">Manage Settings</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Trips</h3>
+                        <i class="fas fa-list-alt" style="color: var(--success); font-size: 1.5rem;"></i>
+                    </div>
+                    <p>View and manage all delivery requests in the system.</p>
+                    <button class="btn btn-outline" id="view-all-trips-btn" style="margin-top: 15px; width: 100%;">View All Trips</button>
+                </div>
+            </div>
+            
+            <!-- Driver Management Section -->
+            <div id="driver-management-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">Driver Approval Requests</h3>
+                <div class="table-container">
+                    <table id="pending-drivers-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Bike Details</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Pending drivers will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Settings Management Section -->
+            <div id="settings-management-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">System Settings</h3>
+                <div class="card">
+                    <div class="form-group">
+                        <label for="price-per-km">Price Per Kilometer ($)</label>
+                        <input type="number" id="price-per-km" class="form-control" min="0" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="commission-percentage">Driver Commission Percentage (%)</label>
+                        <input type="number" id="commission-percentage" class="form-control" min="0" max="100" step="0.1">
+                    </div>
+                    <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+                </div>
+            </div>
+            
+            <!-- All Trips Section -->
+            <div id="all-trips-section" style="display: none;">
+                <h3 style="margin-bottom: 20px;">All Delivery Requests</h3>
+                <div class="table-container">
+                    <table id="all-trips-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Customer</th>
+                                <th>Pickup</th>
+                                <th>Destination</th>
+                                <th>Driver</th>
+                                <th>Status</th>
+                                <th>Price</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- All trips will be populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">Newtech K-DELI</div>
+                <p>Fast, reliable delivery service at your fingertips</p>
+                <p>&copy; 2023 K-DELI. All rights reserved.</p>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script>
         // Supabase Configuration
-        const SUPABASE_URL = 'https://ayzjaewnsjdblubxzukc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF5emphZXduc2pkYmx1Ynh6dWtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxNzM1OTksImV4cCI6MjA3OTc0OTU5OX0.3Ute_0R7AUmW43JrV6ZIdBPZ_1VUsRgivl600CBu4Go';
-        
-        // Initialize Supabase client
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseUrl = 'https://upvvetmxiygjscsvrpte.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVwdnZldG14aXlnanNjc3ZycHRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzNDUxNTQsImV4cCI6MjA3OTkyMTE1NH0.prhVg9dpNEXuGjzXj_0SN9ad--npkuZH6i-eJQdStos';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Application State
-        const appState = {
-            user: null,
-            currentRide: null,
-            rideStatus: 'idle', // idle, searching, assigned, pickup, ongoing, completed
-            timer: null,
-            timerSeconds: 0,
-            selectedRating: 0,
-            currentView: 'passenger',
-            rideHistory: [],
-            notifications: [],
-            maps: {
-                rideMap: null,
-                trackingMap: null,
-                driverMap: null
-            },
-            chatMessages: [],
-            currentDriver: null,
-            isLoggedIn: false
-        };
+        // Global State
+        let currentUser = null;
+        let userRole = null;
+        let settings = null;
 
         // DOM Elements
-        const elements = {
-            // Views
-            passengerView: document.getElementById('passengerView'),
-            driverDashboard: document.getElementById('driverDashboard'),
-            
-            // Modals
-            loginModal: document.getElementById('loginModal'),
-            profileModal: document.getElementById('profileModal'),
-            notificationsModal: document.getElementById('notificationsModal'),
-            
-            // Forms
-            loginForm: document.getElementById('loginForm'),
-            signupForm: document.getElementById('signupForm'),
-            
-            // Booking
-            bookingCard: document.getElementById('bookingCard'),
-            rideStatus: document.getElementById('rideStatus'),
-            ratingSection: document.getElementById('ratingSection'),
-            requestRideBtn: document.getElementById('requestRideBtn'),
-            cancelRideBtn: document.getElementById('cancelRideBtn'),
-            callDriverBtn: document.getElementById('callDriverBtn'),
-            chatDriverBtn: document.getElementById('chatDriverBtn'),
-            shareRideBtn: document.getElementById('shareRideBtn'),
-            
-            // Ride status
-            statusText: document.getElementById('statusText'),
-            timer: document.getElementById('timer'),
-            step1: document.getElementById('step1'),
-            step2: document.getElementById('step2'),
-            step3: document.getElementById('step3'),
-            step4: document.getElementById('step4'),
-            
-            // Rating
-            stars: document.querySelectorAll('.star'),
-            submitRatingBtn: document.getElementById('submitRatingBtn'),
-            reviewText: document.getElementById('reviewText'),
-            rateDriverName: document.getElementById('rateDriverName'),
-            
-            // User
-            greeting: document.getElementById('greeting'),
-            driverGreeting: document.getElementById('driverGreeting'),
-            profileBtn: document.getElementById('profileBtn'),
-            userName: document.getElementById('userName'),
-            userEmail: document.getElementById('userEmail'),
-            userRole: document.getElementById('userRole'),
-            userStatus: document.getElementById('userStatus'),
-            profileAvatar: document.getElementById('profileAvatar'),
-            editName: document.getElementById('editName'),
-            editEmail: document.getElementById('editEmail'),
-            saveProfileBtn: document.getElementById('saveProfileBtn'),
-            logoutBtn: document.getElementById('logoutBtn'),
-            
-            // Payment
-            paymentMethods: document.querySelectorAll('.payment-method'),
-            
-            // Fare
-            fareAmount: document.getElementById('fareAmount'),
-            fareDetails: document.getElementById('fareDetails'),
-            
-            // Driver Dashboard
-            availabilityToggle: document.getElementById('availabilityToggle'),
-            todayEarnings: document.getElementById('todayEarnings'),
-            totalRides: document.getElementById('totalRides'),
-            driverRatingValue: document.getElementById('driverRatingValue'),
-            onlineHours: document.getElementById('onlineHours'),
-            driverRideHistory: document.getElementById('driverRideHistory'),
-            
-            // Navigation
-            navItems: document.querySelectorAll('.nav-item'),
-            historyNav: document.getElementById('historyNav'),
-            
-            // Maps
-            rideMap: document.getElementById('rideMap'),
-            trackingMap: document.getElementById('trackingMap'),
-            driverMap: document.getElementById('driverMap'),
-            
-            // Chat
-            chatContainer: document.getElementById('chatContainer'),
-            chatMessages: document.getElementById('chatMessages'),
-            chatInput: document.getElementById('chatInput'),
-            sendMessageBtn: document.getElementById('sendMessageBtn'),
-            chatDriverName: document.getElementById('chatDriverName'),
-            
-            // Notifications
-            notificationsBtn: document.getElementById('notificationsBtn'),
-            notificationsList: document.getElementById('notificationsList'),
-            
-            // Emergency
-            emergencyBtn: document.getElementById('emergencyBtn'),
-            
-            // Location inputs
-            pickup: document.getElementById('pickup'),
-            dropoff: document.getElementById('dropoff'),
-            pickupSuggestions: document.getElementById('pickupSuggestions'),
-            dropoffSuggestions: document.getElementById('dropoffSuggestions'),
-            
-            // Ride history
-            rideHistoryList: document.getElementById('rideHistoryList'),
-            
-            // ETA
-            etaValue: document.getElementById('etaValue'),
-            
-            // Driver assigned
-            driverAssigned: document.getElementById('driverAssigned'),
-            driverName: document.getElementById('driverName'),
-            driverRating: document.getElementById('driverRating'),
-            driverRides: document.getElementById('driverRides'),
-            driverPlate: document.getElementById('driverPlate')
-        };
-
+        const pages = document.querySelectorAll('.page');
+        const navLinks = document.getElementById('nav-links');
+        const authButtons = document.getElementById('auth-buttons');
+        
         // Initialize the application
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeApp();
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Check if user is already logged in
+            await checkAuthState();
+            
+            // Set up event listeners
             setupEventListeners();
-            initializeMaps();
         });
 
-        async function initializeApp() {
-            // Check if user is logged in
+        // Check authentication state
+        async function checkAuthState() {
             const { data: { session } } = await supabase.auth.getSession();
             
             if (session) {
-                appState.user = session.user;
-                appState.isLoggedIn = true;
-                await loadUserProfile();
-                updateUserInterface();
-                showView(appState.user.user_metadata?.role || 'passenger');
-                
-                // Load user-specific data
-                await loadUserData();
+                currentUser = session.user;
+                await determineUserRole();
+                showDashboard();
             } else {
-                // Show login modal if no user is logged in
-                setTimeout(() => {
-                    elements.loginModal.classList.add('active');
-                    elements.loginForm.style.display = 'block';
-                    elements.signupForm.style.display = 'none';
-                }, 1000);
+                showPage('landing-page');
             }
-            
-            // Set up real-time subscriptions
-            setupRealtimeSubscriptions();
         }
 
-        async function loadUserProfile() {
-            if (!appState.user) return;
+        // Determine user role (user, driver, admin)
+        async function determineUserRole() {
+            if (!currentUser) return;
             
-            const { data: profile, error } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('id', appState.user.id)
-                .single();
-            
-            if (error) {
-                console.error('Error loading profile:', error);
+            // Check if user is an admin (simple check for demo - in production, use a proper role system)
+            if (currentUser.email === 'admin@k-deli.com') {
+                userRole = 'admin';
                 return;
             }
             
-            if (profile) {
-                appState.user.profile = profile;
-            }
-        }
-
-        async function loadUserData() {
-            if (!appState.user) return;
-            
-            // Load ride history
-            await loadRideHistory();
-            
-            // Load notifications
-            await loadNotifications();
-            
-            // Load driver stats (if driver)
-            if (appState.user.user_metadata?.role === 'driver') {
-                await loadDriverStats();
-            }
-        }
-
-        async function loadRideHistory() {
-            if (!appState.user) return;
-            
-            let query = supabase
-                .from('rides')
-                .select('*');
-            
-            if (appState.user.user_metadata?.role === 'passenger') {
-                query = query.eq('passenger_id', appState.user.id);
-            } else if (appState.user.user_metadata?.role === 'driver') {
-                query = query.eq('driver_id', appState.user.id);
-            }
-            
-            const { data: rides, error } = await query
-                .order('created_at', { ascending: false })
-                .limit(10);
-            
-            if (error) {
-                console.error('Error loading ride history:', error);
-                return;
-            }
-            
-            appState.rideHistory = rides || [];
-            renderRideHistory();
-        }
-
-        async function loadNotifications() {
-            if (!appState.user) return;
-            
-            const { data: notifications, error } = await supabase
-                .from('notifications')
-                .select('*')
-                .eq('user_id', appState.user.id)
-                .order('created_at', { ascending: false })
-                .limit(20);
-            
-            if (error) {
-                console.error('Error loading notifications:', error);
-                return;
-            }
-            
-            appState.notifications = notifications || [];
-            renderNotifications();
-            updateNotificationBadge();
-        }
-
-        async function loadDriverStats() {
-            if (!appState.user || appState.user.user_metadata?.role !== 'driver') return;
-            
-            // Today's earnings
-            const today = new Date().toISOString().split('T')[0];
-            const { data: todayRides, error: todayError } = await supabase
-                .from('rides')
-                .select('fare')
-                .eq('driver_id', appState.user.id)
-                .eq('status', 'completed')
-                .gte('created_at', today);
-            
-            if (!todayError && todayRides) {
-                const todayEarnings = todayRides.reduce((sum, ride) => sum + (ride.fare || 0), 0);
-                elements.todayEarnings.textContent = `${todayEarnings} ZMW`;
-            }
-            
-            // Total rides
-            const { data: allRides, error: ridesError } = await supabase
-                .from('rides')
-                .select('id')
-                .eq('driver_id', appState.user.id)
-                .eq('status', 'completed');
-            
-            if (!ridesError && allRides) {
-                elements.totalRides.textContent = allRides.length;
-            }
-            
-            // Driver rating
-            const { data: driver, error: driverError } = await supabase
+            // Check if user is a driver
+            const { data: driver, error } = await supabase
                 .from('drivers')
-                .select('rating')
-                .eq('user_id', appState.user.id)
-                .single();
-            
-            if (!driverError && driver) {
-                elements.driverRatingValue.textContent = driver.rating || '0.0';
-            }
-        }
-
-        function setupRealtimeSubscriptions() {
-            // Subscribe to ride status changes
-            if (appState.user) {
-                const rideSubscription = supabase
-                    .channel('ride-changes')
-                    .on(
-                        'postgres_changes',
-                        {
-                            event: '*',
-                            schema: 'public',
-                            table: 'rides',
-                            filter: `passenger_id=eq.${appState.user.id}`
-                        },
-                        async (payload) => {
-                            console.log('Ride update received:', payload);
-                            
-                            if (payload.eventType === 'UPDATE') {
-                                const ride = payload.new;
-                                
-                                if (ride.status === 'assigned' && ride.driver_id) {
-                                    // Load driver details
-                                    const { data: driver } = await supabase
-                                        .from('drivers')
-                                        .select('*')
-                                        .eq('user_id', ride.driver_id)
-                                        .single();
-                                    
-                                    if (driver) {
-                                        appState.currentDriver = driver;
-                                        updateDriverAssignedUI(driver);
-                                    }
-                                    
-                                    updateRideStatus('assigned');
-                                } else if (ride.status === 'completed') {
-                                    completeRide();
-                                }
-                            }
-                        }
-                    )
-                    .subscribe();
-                
-                // Subscribe to notifications
-                const notificationSubscription = supabase
-                    .channel('notification-changes')
-                    .on(
-                        'postgres_changes',
-                        {
-                            event: 'INSERT',
-                            schema: 'public',
-                            table: 'notifications',
-                            filter: `user_id=eq.${appState.user.id}`
-                        },
-                        (payload) => {
-                            console.log('New notification:', payload);
-                            appState.notifications.unshift(payload.new);
-                            renderNotifications();
-                            updateNotificationBadge();
-                            showNotification(`New notification: ${payload.new.title}`, 'info');
-                        }
-                    )
-                    .subscribe();
-            }
-        }
-
-        function initializeMaps() {
-            // Initialize main ride map (simulated for Katete area)
-            if (elements.rideMap) {
-                appState.maps.rideMap = L.map('rideMap').setView([-14.06, 31.48], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(appState.maps.rideMap);
-                
-                // Add some markers for key locations in Katete
-                const locations = [
-                    { name: "Katete Town Center", lat: -14.06, lng: 31.48 },
-                    { name: "St. Francis Hospital", lat: -14.07, lng: 31.47 },
-                    { name: "Market", lat: -14.06, lng: 31.49 },
-                    { name: "Bus Station", lat: -14.05, lng: 31.48 }
-                ];
-                
-                locations.forEach(location => {
-                    L.marker([location.lat, location.lng])
-                        .addTo(appState.maps.rideMap)
-                        .bindPopup(location.name);
-                });
-            }
-            
-            // Initialize tracking map
-            if (elements.trackingMap) {
-                appState.maps.trackingMap = L.map('trackingMap').setView([-14.06, 31.48], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(appState.maps.trackingMap);
-            }
-            
-            // Initialize driver map
-            if (elements.driverMap) {
-                appState.maps.driverMap = L.map('driverMap').setView([-14.06, 31.48], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(appState.maps.driverMap);
-            }
-        }
-
-        function setupEventListeners() {
-            // Modal controls
-            document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    elements.loginModal.classList.remove('active');
-                    elements.profileModal.classList.remove('active');
-                    elements.notificationsModal.classList.remove('active');
-                });
-            });
-
-            // Profile button
-            elements.profileBtn.addEventListener('click', function() {
-                if (appState.user) {
-                    elements.editName.value = appState.user.user_metadata?.full_name || '';
-                    elements.editEmail.value = appState.user.email || '';
-                    elements.userName.textContent = appState.user.user_metadata?.full_name || 'User Name';
-                    elements.userEmail.textContent = `Email: ${appState.user.email || '--'}`;
-                    elements.userRole.textContent = `Role: ${appState.user.user_metadata?.role || '--'}`;
-                    elements.profileAvatar.textContent = (appState.user.user_metadata?.full_name || 'U').charAt(0).toUpperCase();
-                    
-                    // Update status badge
-                    const status = appState.user.profile?.status || 'pending';
-                    elements.userStatus.textContent = status === 'approved' ? 'Approved' : 'Pending Approval';
-                    elements.userStatus.className = `status-badge ${status === 'approved' ? 'status-approved' : 'status-pending'}`;
-                    
-                    elements.profileModal.classList.add('active');
-                } else {
-                    elements.loginModal.classList.add('active');
-                }
-            });
-
-            // Notifications button
-            elements.notificationsBtn.addEventListener('click', function() {
-                elements.notificationsModal.classList.add('active');
-            });
-
-            // Navigation
-            elements.navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const view = this.getAttribute('data-view');
-                    if (view && appState.user) {
-                        showView(view);
-                        
-                        // Update active nav item
-                        elements.navItems.forEach(nav => nav.classList.remove('active'));
-                        this.classList.add('active');
-                    }
-                });
-            });
-
-            // History navigation
-            elements.historyNav.addEventListener('click', function(e) {
-                e.preventDefault();
-                if (appState.user) {
-                    showRideHistory();
-                    
-                    // Update active nav item
-                    elements.navItems.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                }
-            });
-
-            // Login/Signup form toggling
-            document.getElementById('showSignup').addEventListener('click', function(e) {
-                e.preventDefault();
-                elements.loginForm.style.display = 'none';
-                elements.signupForm.style.display = 'block';
-            });
-
-            document.getElementById('showLogin').addEventListener('click', function(e) {
-                e.preventDefault();
-                elements.signupForm.style.display = 'none';
-                elements.loginForm.style.display = 'block';
-            });
-
-            // Show driver fields when role is driver
-            document.getElementById('signupRole').addEventListener('change', function() {
-                const driverFields = document.getElementById('driverFields');
-                if (this.value === 'driver') {
-                    driverFields.style.display = 'block';
-                } else {
-                    driverFields.style.display = 'none';
-                }
-            });
-
-            // Login button
-            document.getElementById('loginBtn').addEventListener('click', async function() {
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const role = document.getElementById('userRole').value;
-                
-                if (email && password) {
-                    const { data, error } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password
-                    });
-                    
-                    if (error) {
-                        showNotification(error.message, "error");
-                        return;
-                    }
-                    
-                    appState.user = data.user;
-                    await loadUserProfile();
-                    updateUserInterface();
-                    elements.loginModal.classList.remove('active');
-                    
-                    // Show appropriate view based on role
-                    showView(role);
-                    
-                    // Load user data
-                    await loadUserData();
-                    
-                    // Show success message
-                    showNotification("Login successful!", "success");
-                } else {
-                    showNotification("Please fill in all fields", "error");
-                }
-            });
-
-            // Signup button
-            document.getElementById('signupBtn').addEventListener('click', async function() {
-                const name = document.getElementById('fullName').value;
-                const email = document.getElementById('signupEmail').value;
-                const password = document.getElementById('signupPassword').value;
-                const role = document.getElementById('signupRole').value;
-                const vehiclePlate = document.getElementById('vehiclePlate').value;
-                const vehicleType = document.getElementById('vehicleType').value;
-                
-                if (name && email && password) {
-                    const { data, error } = await supabase.auth.signUp({
-                        email: email,
-                        password: password,
-                        options: {
-                            data: {
-                                full_name: name,
-                                role: role
-                            }
-                        }
-                    });
-                    
-                    if (error) {
-                        showNotification(error.message, "error");
-                        return;
-                    }
-                    
-                    // Create user profile
-                    const { error: profileError } = await supabase
-                        .from('profiles')
-                        .insert([
-                            {
-                                id: data.user.id,
-                                full_name: name,
-                                email: email,
-                                role: role,
-                                status: 'pending'
-                            }
-                        ]);
-                    
-                    if (profileError) {
-                        console.error('Error creating profile:', profileError);
-                        showNotification("Error creating profile", "error");
-                        return;
-                    }
-                    
-                    // If driver, create driver profile
-                    if (role === 'driver') {
-                        const { error: driverError } = await supabase
-                            .from('drivers')
-                            .insert([
-                                {
-                                    user_id: data.user.id,
-                                    name: name,
-                                    vehicle_plate: vehiclePlate,
-                                    vehicle_type: vehicleType,
-                                    status: 'pending',
-                                    available: false,
-                                    rating: 5.0,
-                                    total_rides: 0
-                                }
-                            ]);
-                        
-                        if (driverError) {
-                            console.error('Error creating driver profile:', driverError);
-                        }
-                    }
-                    
-                    appState.user = data.user;
-                    await loadUserProfile();
-                    updateUserInterface();
-                    elements.loginModal.classList.remove('active');
-                    
-                    // Show passenger view by default
-                    showView('passenger');
-                    
-                    // Show success message
-                    showNotification("Account created successfully! Waiting for admin approval.", "success");
-                } else {
-                    showNotification("Please fill in all fields", "error");
-                }
-            });
-
-            // Save profile
-            elements.saveProfileBtn.addEventListener('click', async function() {
-                const name = elements.editName.value;
-                const email = elements.editEmail.value;
-                
-                if (name && email) {
-                    // Update user metadata
-                    const { error: authError } = await supabase.auth.updateUser({
-                        data: { full_name: name }
-                    });
-                    
-                    if (authError) {
-                        showNotification(authError.message, "error");
-                        return;
-                    }
-                    
-                    // Update profile
-                    const { error: profileError } = await supabase
-                        .from('profiles')
-                        .update({ full_name: name, email: email })
-                        .eq('id', appState.user.id);
-                    
-                    if (profileError) {
-                        showNotification(profileError.message, "error");
-                        return;
-                    }
-                    
-                    await loadUserProfile();
-                    updateUserInterface();
-                    elements.profileModal.classList.remove('active');
-                    
-                    showNotification("Profile updated successfully!", "success");
-                } else {
-                    showNotification("Please fill in all fields", "error");
-                }
-            });
-
-            // Logout
-            elements.logoutBtn.addEventListener('click', async function() {
-                const { error } = await supabase.auth.signOut();
-                if (error) {
-                    showNotification(error.message, "error");
-                    return;
-                }
-                
-                appState.user = null;
-                elements.profileModal.classList.remove('active');
-                updateUserInterface();
-                
-                // Reset to passenger view
-                showView('passenger');
-                
-                // Show login modal
-                setTimeout(() => {
-                    elements.loginModal.classList.add('active');
-                }, 500);
-            });
-
-            // Request ride
-            elements.requestRideBtn.addEventListener('click', async function() {
-                if (!appState.user) {
-                    elements.loginModal.classList.add('active');
-                    return;
-                }
-                
-                if (appState.user.profile?.status !== 'approved') {
-                    showNotification("Your account is pending approval. You cannot book rides yet.", "error");
-                    return;
-                }
-                
-                if (appState.rideStatus !== 'idle') return;
-                
-                const pickup = document.getElementById('pickup').value;
-                const dropoff = document.getElementById('dropoff').value;
-                const rideType = document.getElementById('rideType').value;
-                
-                if (!pickup || !dropoff) {
-                    showNotification("Please enter both pickup and dropoff locations", "error");
-                    return;
-                }
-                
-                // Calculate fare
-                const distance = calculateDistance(pickup, dropoff);
-                let fare = distance * 5; // Base fare of 5 ZMW per km
-                
-                // Apply ride type multiplier
-                if (rideType === 'premium') fare *= 1.5;
-                if (rideType === 'delivery') fare *= 1.2;
-                
-                // Round to nearest whole number
-                fare = Math.round(fare);
-                
-                // Create ride request
-                const { data: ride, error } = await supabase
-                    .from('rides')
-                    .insert([
-                        {
-                            passenger_id: appState.user.id,
-                            pickup_location: pickup,
-                            dropoff_location: dropoff,
-                            ride_type: rideType,
-                            fare: fare,
-                            status: 'requested',
-                            payment_method: document.querySelector('.payment-method.active').getAttribute('data-method')
-                        }
-                    ])
-                    .select()
-                    .single();
-                
-                if (error) {
-                    showNotification(error.message, "error");
-                    return;
-                }
-                
-                appState.currentRide = ride;
-                startRideProcess();
-            });
-
-            // Cancel ride
-            elements.cancelRideBtn.addEventListener('click', async function() {
-                if (confirm("Are you sure you want to cancel this ride?")) {
-                    if (appState.currentRide) {
-                        const { error } = await supabase
-                            .from('rides')
-                            .update({ status: 'cancelled' })
-                            .eq('id', appState.currentRide.id);
-                        
-                        if (error) {
-                            showNotification(error.message, "error");
-                            return;
-                        }
-                    }
-                    
-                    cancelRide();
-                }
-            });
-
-            // Call driver
-            elements.callDriverBtn.addEventListener('click', function() {
-                if (appState.currentDriver) {
-                    showNotification(`Calling ${appState.currentDriver.name}...`, "info");
-                    // In a real app, this would initiate a phone call to appState.currentDriver.phone
-                }
-            });
-
-            // Chat with driver
-            elements.chatDriverBtn.addEventListener('click', function() {
-                if (appState.currentDriver) {
-                    elements.chatDriverName.textContent = appState.currentDriver.name;
-                    elements.chatContainer.style.display = 'block';
-                    loadChatMessages();
-                }
-            });
-
-            // Send message
-            elements.sendMessageBtn.addEventListener('click', sendMessage);
-            elements.chatInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-
-            // Share ride
-            elements.shareRideBtn.addEventListener('click', function() {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'My K Deli Ride',
-                        text: 'I\'m sharing my ride details with you',
-                        url: window.location.href
-                    })
-                    .then(() => showNotification('Ride shared successfully', 'success'))
-                    .catch(() => showNotification('Failed to share ride', 'error'));
-                } else {
-                    // Fallback for browsers that don't support Web Share API
-                    navigator.clipboard.writeText(window.location.href)
-                        .then(() => showNotification('Ride link copied to clipboard', 'success'))
-                        .catch(() => showNotification('Failed to copy ride link', 'error'));
-                }
-            });
-
-            // Payment method selection
-            elements.paymentMethods.forEach(method => {
-                method.addEventListener('click', function() {
-                    elements.paymentMethods.forEach(m => m.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
-
-            // Rating stars
-            elements.stars.forEach(star => {
-                star.addEventListener('click', function() {
-                    const rating = parseInt(this.getAttribute('data-rating'));
-                    appState.selectedRating = rating;
-                    
-                    elements.stars.forEach(s => {
-                        if (parseInt(s.getAttribute('data-rating')) <= rating) {
-                            s.classList.add('active');
-                        } else {
-                            s.classList.remove('active');
-                        }
-                    });
-                });
-            });
-
-            // Submit rating
-            elements.submitRatingBtn.addEventListener('click', async function() {
-                if (appState.selectedRating === 0) {
-                    showNotification("Please select a rating", "error");
-                    return;
-                }
-                
-                if (!appState.currentRide || !appState.currentDriver) {
-                    showNotification("No active ride to rate", "error");
-                    return;
-                }
-                
-                // Update ride with rating
-                const { error: rideError } = await supabase
-                    .from('rides')
-                    .update({ 
-                        rating: appState.selectedRating,
-                        review: elements.reviewText.value
-                    })
-                    .eq('id', appState.currentRide.id);
-                
-                if (rideError) {
-                    showNotification(rideError.message, "error");
-                    return;
-                }
-                
-                // Update driver rating
-                const newRating = await calculateNewDriverRating(appState.currentDriver.user_id, appState.selectedRating);
-                const { error: driverError } = await supabase
-                    .from('drivers')
-                    .update({ rating: newRating })
-                    .eq('user_id', appState.currentDriver.user_id);
-                
-                if (driverError) {
-                    showNotification(driverError.message, "error");
-                    return;
-                }
-                
-                showNotification(`Thank you for your ${appState.selectedRating}-star rating!`, "success");
-                resetApp();
-                
-                // Reload ride history
-                await loadRideHistory();
-            });
-
-            // Location inputs - update fare when changed
-            elements.pickup.addEventListener('input', function() {
-                updateFare();
-                showLocationSuggestions(this.value, elements.pickupSuggestions);
-            });
-            
-            elements.dropoff.addEventListener('input', function() {
-                updateFare();
-                showLocationSuggestions(this.value, elements.dropoffSuggestions);
-            });
-            
-            document.getElementById('rideType').addEventListener('change', updateFare);
-
-            // Driver availability toggle
-            elements.availabilityToggle.addEventListener('change', async function() {
-                if (!appState.user || appState.user.user_metadata?.role !== 'driver') return;
-                
-                const { error } = await supabase
-                    .from('drivers')
-                    .update({ available: this.checked })
-                    .eq('user_id', appState.user.id);
-                
-                if (error) {
-                    showNotification(error.message, "error");
-                    return;
-                }
-                
-                if (this.checked) {
-                    showNotification("You are now available for rides", "success");
-                } else {
-                    showNotification("You are now unavailable for rides", "info");
-                }
-            });
-
-            // Emergency button
-            elements.emergencyBtn.addEventListener('click', async function() {
-                if (confirm("This will notify emergency contacts and authorities. Are you sure?")) {
-                    // Create emergency notification
-                    const { error } = await supabase
-                        .from('notifications')
-                        .insert([
-                            {
-                                user_id: appState.user.id,
-                                title: 'Emergency Alert',
-                                message: 'User has triggered an emergency alert',
-                                type: 'emergency'
-                            }
-                        ]);
-                    
-                    if (error) {
-                        showNotification(error.message, "error");
-                        return;
-                    }
-                    
-                    showNotification("Emergency alert sent! Help is on the way.", "error");
-                }
-            });
-
-            // Close location suggestions when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.input-with-icon')) {
-                    elements.pickupSuggestions.style.display = 'none';
-                    elements.dropoffSuggestions.style.display = 'none';
-                }
-            });
-        }
-
-        async function calculateNewDriverRating(driverId, newRating) {
-            // Get all ratings for this driver
-            const { data: rides, error } = await supabase
-                .from('rides')
-                .select('rating')
-                .eq('driver_id', driverId)
-                .not('rating', 'is', null);
-            
-            if (error || !rides || rides.length === 0) {
-                return newRating;
-            }
-            
-            // Calculate average rating
-            const total = rides.reduce((sum, ride) => sum + ride.rating, 0) + newRating;
-            return Math.round((total / (rides.length + 1)) * 10) / 10;
-        }
-
-        async function loadChatMessages() {
-            if (!appState.currentRide) return;
-            
-            const { data: messages, error } = await supabase
-                .from('chat_messages')
                 .select('*')
-                .eq('ride_id', appState.currentRide.id)
-                .order('created_at', { ascending: true });
+                .eq('user_id', currentUser.id)
+                .single();
+                
+            if (driver && driver.approved) {
+                userRole = 'driver';
+            } else if (driver && !driver.approved) {
+                userRole = 'pending_driver';
+            } else {
+                userRole = 'user';
+            }
+        }
+
+        // Show appropriate dashboard based on user role
+        function showDashboard() {
+            switch(userRole) {
+                case 'admin':
+                    showPage('admin-dashboard');
+                    setupAdminDashboard();
+                    break;
+                case 'driver':
+                    showPage('driver-dashboard');
+                    setupDriverDashboard();
+                    break;
+                case 'pending_driver':
+                    alert('Your driver account is pending approval. You can use the app as a regular user.');
+                    userRole = 'user';
+                    showPage('user-dashboard');
+                    setupUserDashboard();
+                    break;
+                default:
+                    showPage('user-dashboard');
+                    setupUserDashboard();
+            }
             
-            if (error) {
-                console.error('Error loading chat messages:', error);
+            updateNavigation();
+        }
+
+        // Update navigation based on user role
+        function updateNavigation() {
+            navLinks.innerHTML = '';
+            authButtons.innerHTML = '';
+            
+            if (currentUser) {
+                // User is logged in
+                const userEmail = document.createElement('span');
+                userEmail.textContent = currentUser.email;
+                userEmail.style.marginRight = '15px';
+                authButtons.appendChild(userEmail);
+                
+                const logoutBtn = document.createElement('button');
+                logoutBtn.textContent = 'Logout';
+                logoutBtn.className = 'btn btn-outline';
+                logoutBtn.id = 'logout-btn';
+                authButtons.appendChild(logoutBtn);
+                
+                // Add role-specific navigation
+                if (userRole === 'admin') {
+                    navLinks.innerHTML = `
+                        <li><a href="#" data-page="admin-dashboard">Admin Dashboard</a></li>
+                    `;
+                } else if (userRole === 'driver') {
+                    navLinks.innerHTML = `
+                        <li><a href="#" data-page="driver-dashboard">Driver Dashboard</a></li>
+                    `;
+                } else {
+                    navLinks.innerHTML = `
+                        <li><a href="#" data-page="user-dashboard">User Dashboard</a></li>
+                    `;
+                }
+            } else {
+                // User is not logged in
+                authButtons.innerHTML = `
+                    <button class="btn btn-outline" id="login-btn">Login</button>
+                    <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+                `;
+                
+                navLinks.innerHTML = `
+                    <li><a href="#" data-page="landing-page">Home</a></li>
+                `;
+            }
+            
+            // Re-attach event listeners for dynamically created elements
+            setupEventListeners();
+        }
+
+        // Show specific page and hide others
+        function showPage(pageId) {
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.getAttribute('data-page');
+                    if (page) showPage(page);
+                });
+            });
+            
+            // Auth buttons
+            document.getElementById('login-btn')?.addEventListener('click', () => showPage('login-page'));
+            document.getElementById('signup-btn')?.addEventListener('click', () => showPage('signup-page'));
+            document.getElementById('logout-btn')?.addEventListener('click', handleLogout);
+            document.getElementById('get-started-btn')?.addEventListener('click', () => showPage('login-page'));
+            
+            // Auth form submissions
+            document.getElementById('login-submit')?.addEventListener('click', handleLogin);
+            document.getElementById('signup-submit')?.addEventListener('click', handleSignup);
+            
+            // Auth navigation links
+            document.getElementById('go-to-signup')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('signup-page');
+            });
+            
+            document.getElementById('go-to-login')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('login-page');
+            });
+            
+            document.getElementById('go-to-driver-register')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('driver-register-page');
+            });
+            
+            document.getElementById('go-to-login-from-driver')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage('login-page');
+            });
+            
+            // Driver registration
+            document.getElementById('driver-register-submit')?.addEventListener('click', handleDriverRegistration);
+            document.getElementById('photo-upload-area')?.addEventListener('click', () => {
+                document.getElementById('driver-photo').click();
+            });
+            
+            // User dashboard
+            document.getElementById('create-delivery-btn')?.addEventListener('click', showCreateDeliveryForm);
+            document.getElementById('view-my-trips-btn')?.addEventListener('click', showMyTrips);
+            document.getElementById('cancel-delivery-btn')?.addEventListener('click', hideCreateDeliveryForm);
+            document.getElementById('submit-delivery-btn')?.addEventListener('click', handleCreateDelivery);
+            document.getElementById('distance')?.addEventListener('input', calculatePrice);
+            
+            // Driver dashboard
+            document.getElementById('view-available-trips-btn')?.addEventListener('click', showAvailableTrips);
+            document.getElementById('view-earnings-btn')?.addEventListener('click', showEarnings);
+            
+            // Admin dashboard
+            document.getElementById('manage-drivers-btn')?.addEventListener('click', showDriverManagement);
+            document.getElementById('manage-settings-btn')?.addEventListener('click', showSettingsManagement);
+            document.getElementById('view-all-trips-btn')?.addEventListener('click', showAllTrips);
+            document.getElementById('save-settings-btn')?.addEventListener('click', handleSaveSettings);
+        }
+
+        // Auth Functions
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const alertDiv = document.getElementById('login-alert');
+            
+            if (!email || !password) {
+                showAlert(alertDiv, 'Please fill in all fields', 'error');
                 return;
             }
             
-            elements.chatMessages.innerHTML = '';
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email,
+                password
+            });
             
-            if (messages && messages.length > 0) {
-                messages.forEach(message => {
-                    const messageElement = document.createElement('div');
-                    messageElement.className = `message ${message.sender_id === appState.user.id ? 'sent' : 'received'}`;
-                    messageElement.textContent = message.message;
-                    elements.chatMessages.appendChild(messageElement);
-                });
-                
-                elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+            if (error) {
+                showAlert(alertDiv, error.message, 'error');
+            } else {
+                currentUser = data.user;
+                await determineUserRole();
+                showDashboard();
             }
         }
 
-        async function sendMessage() {
-            const message = elements.chatInput.value.trim();
-            if (!message || !appState.currentRide) return;
+        async function handleSignup() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const alertDiv = document.getElementById('signup-alert');
             
-            // Add message to database
-            const { error } = await supabase
-                .from('chat_messages')
+            if (!email || !password || !confirmPassword) {
+                showAlert(alertDiv, 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showAlert(alertDiv, 'Passwords do not match', 'error');
+                return;
+            }
+            
+            const { data, error } = await supabase.auth.signUp({
+                email,
+                password
+            });
+            
+            if (error) {
+                showAlert(alertDiv, error.message, 'error');
+            } else {
+                showAlert(alertDiv, 'Account created successfully! Please check your email for verification.', 'success');
+                setTimeout(() => {
+                    showPage('login-page');
+                }, 2000);
+            }
+        }
+
+        async function handleLogout() {
+            await supabase.auth.signOut();
+            currentUser = null;
+            userRole = null;
+            showPage('landing-page');
+            updateNavigation();
+        }
+
+        // Driver Registration
+        async function handleDriverRegistration() {
+            const name = document.getElementById('driver-name').value;
+            const phone = document.getElementById('driver-phone').value;
+            const bike = document.getElementById('driver-bike').value;
+            const photoFile = document.getElementById('driver-photo').files[0];
+            const alertDiv = document.getElementById('driver-register-alert');
+            
+            if (!name || !phone || !bike) {
+                showAlert(alertDiv, 'Please fill in all fields', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                showAlert(alertDiv, 'Please log in first', 'error');
+                return;
+            }
+            
+            // In a real app, you would upload the photo to storage
+            // For this demo, we'll just store a placeholder
+            const photoUrl = photoFile ? 'uploaded_photo_url' : 'default_photo_url';
+            
+            const { data, error } = await supabase
+                .from('drivers')
                 .insert([
                     {
-                        ride_id: appState.currentRide.id,
-                        sender_id: appState.user.id,
-                        message: message
+                        user_id: currentUser.id,
+                        name,
+                        phone,
+                        bike_details: bike,
+                        photo_url: photoUrl,
+                        approved: false
                     }
                 ]);
             
             if (error) {
-                showNotification(error.message, "error");
+                showAlert(alertDiv, error.message, 'error');
+            } else {
+                showAlert(alertDiv, 'Driver registration submitted! Waiting for admin approval.', 'success');
+                setTimeout(() => {
+                    showPage('login-page');
+                }, 2000);
+            }
+        }
+
+        // User Dashboard Functions
+        function showCreateDeliveryForm() {
+            document.getElementById('create-delivery-section').style.display = 'block';
+            document.getElementById('my-trips-section').style.display = 'none';
+        }
+
+        function hideCreateDeliveryForm() {
+            document.getElementById('create-delivery-section').style.display = 'none';
+        }
+
+        function showMyTrips() {
+            document.getElementById('create-delivery-section').style.display = 'none';
+            document.getElementById('my-trips-section').style.display = 'block';
+            loadUserTrips();
+        }
+
+        async function calculatePrice() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            
+            if (!distance || distance <= 0) {
+                document.getElementById('price-calculation').style.display = 'none';
                 return;
             }
             
-            // Add message to chat UI
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message sent';
-            messageElement.textContent = message;
-            elements.chatMessages.appendChild(messageElement);
-            
-            // Clear input
-            elements.chatInput.value = '';
-            
-            // Scroll to bottom
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-        }
-
-        function showView(view) {
-            // Hide all views
-            elements.passengerView.style.display = 'none';
-            elements.driverDashboard.style.display = 'none';
-            
-            // Show selected view
-            if (view === 'passenger') {
-                elements.passengerView.style.display = 'block';
-                appState.currentView = 'passenger';
-                renderRideHistory();
-            } else if (view === 'driver') {
-                if (appState.user && appState.user.user_metadata?.role === 'driver' && appState.user.profile?.status === 'approved') {
-                    elements.driverDashboard.style.display = 'block';
-                    appState.currentView = 'driver';
-                    updateDriverDashboard();
-                } else {
-                    showNotification("Driver access not available. Your account might be pending approval.", "error");
-                    showView('passenger');
+            // Get settings from Supabase
+            if (!settings) {
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .single();
+                    
+                if (error) {
+                    console.error('Error fetching settings:', error);
+                    return;
                 }
+                
+                settings = data;
             }
+            
+            const price = distance * settings.price_per_km;
+            document.getElementById('calculated-price').textContent = price.toFixed(2);
+            document.getElementById('price-calculation').style.display = 'block';
         }
 
-        function showRideHistory() {
-            // Show passenger view with history highlighted
-            elements.passengerView.style.display = 'block';
-            appState.currentView = 'passenger';
+        async function handleCreateDelivery() {
+            const itemName = document.getElementById('item-name').value;
+            const pickupLocation = document.getElementById('pickup-location').value;
+            const destination = document.getElementById('destination').value;
+            const distance = parseFloat(document.getElementById('distance').value);
+            const notes = document.getElementById('notes').value;
             
-            // Scroll to history section
-            document.querySelector('.ride-history').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function updateUserInterface() {
-            if (appState.user) {
-                const firstName = appState.user.user_metadata?.full_name?.split(' ')[0] || 'User';
-                elements.greeting.textContent = `Hello, ${firstName}`;
-                elements.driverGreeting.textContent = `Hello, ${firstName}`;
-            } else {
-                elements.greeting.textContent = "Welcome to K Deli Rides";
-                elements.driverGreeting.textContent = "Driver Dashboard";
-            }
-        }
-
-        function renderRideHistory() {
-            if (!elements.rideHistoryList) return;
-            
-            elements.rideHistoryList.innerHTML = '';
-            
-            if (appState.rideHistory.length === 0) {
-                elements.rideHistoryList.innerHTML = '<p style="text-align: center; color: var(--gray);">No ride history yet</p>';
+            if (!itemName || !pickupLocation || !destination || !distance) {
+                alert('Please fill in all required fields');
                 return;
             }
             
-            appState.rideHistory.forEach(ride => {
-                const historyCard = document.createElement('div');
-                historyCard.className = 'history-card';
+            // Calculate price
+            if (!settings) {
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .single();
+                    
+                if (error) {
+                    console.error('Error fetching settings:', error);
+                    return;
+                }
                 
-                const statusClass = ride.status === 'completed' ? 'status-approved' : 
-                                  ride.status === 'cancelled' ? 'status-rejected' : 'status-pending';
-                
-                const statusText = ride.status === 'completed' ? 'Completed' : 
-                                 ride.status === 'cancelled' ? 'Cancelled' : 'In Progress';
-                
-                historyCard.innerHTML = `
-                    <div class="history-header">
-                        <h4>${ride.pickup_location} → ${ride.dropoff_location}</h4>
-                        <span class="fare-amount">${ride.fare || 0} ZMW</span>
-                    </div>
-                    <div class="history-route">
-                        <i class="fas fa-calendar"></i> ${new Date(ride.created_at).toLocaleDateString()} • 
-                        <i class="fas fa-clock"></i> ${new Date(ride.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                    </div>
-                    <div class="history-details">
-                        <span>${ride.ride_type}</span>
-                        <span class="status-badge ${statusClass}">${statusText}</span>
-                    </div>
-                `;
-                
-                elements.rideHistoryList.appendChild(historyCard);
-            });
-        }
-
-        function renderNotifications() {
-            if (!elements.notificationsList) return;
-            
-            elements.notificationsList.innerHTML = '';
-            
-            if (appState.notifications.length === 0) {
-                elements.notificationsList.innerHTML = '<p style="text-align: center; color: var(--gray);">No notifications</p>';
-                return;
+                settings = data;
             }
             
-            appState.notifications.forEach(notification => {
-                const notificationItem = document.createElement('div');
-                notificationItem.className = `history-card ${notification.read ? '' : 'unread'}`;
-                
-                const typeClass = notification.type === 'promo' ? 'status-pending' : 
-                                notification.type === 'emergency' ? 'status-rejected' : 'status-approved';
-                
-                notificationItem.innerHTML = `
-                    <div class="history-header">
-                        <h4>${notification.title}</h4>
-                        <span class="status-badge ${typeClass}">${notification.type}</span>
-                    </div>
-                    <p>${notification.message}</p>
-                    <div class="history-details">
-                        <span>${new Date(notification.created_at).toLocaleDateString()}</span>
-                        ${!notification.read ? '<span class="status-badge status-pending">New</span>' : ''}
-                    </div>
-                `;
-                
-                // Mark as read when clicked
-                notificationItem.addEventListener('click', async function() {
-                    if (!notification.read) {
-                        const { error } = await supabase
-                            .from('notifications')
-                            .update({ read: true })
-                            .eq('id', notification.id);
-                        
-                        if (!error) {
-                            notification.read = true;
-                            updateNotificationBadge();
-                            renderNotifications();
-                        }
+            const totalPrice = distance * settings.price_per_km;
+            
+            const { data, error } = await supabase
+                .from('trips')
+                .insert([
+                    {
+                        user_id: currentUser.id,
+                        item_name: itemName,
+                        pickup_location: pickupLocation,
+                        destination: destination,
+                        distance_km: distance,
+                        notes: notes,
+                        total_price: totalPrice,
+                        status: 'pending'
                     }
-                });
-                
-                elements.notificationsList.appendChild(notificationItem);
-            });
-        }
-
-        function updateNotificationBadge() {
-            const unreadCount = appState.notifications.filter(n => !n.read).length;
-            const badge = elements.notificationsBtn.querySelector('.notification-badge');
+                ]);
             
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount;
-                badge.style.display = 'flex';
+            if (error) {
+                alert('Error creating delivery: ' + error.message);
             } else {
-                badge.style.display = 'none';
+                alert('Delivery request created successfully!');
+                hideCreateDeliveryForm();
+                showMyTrips();
+                
+                // Reset form
+                document.getElementById('item-name').value = '';
+                document.getElementById('pickup-location').value = '';
+                document.getElementById('destination').value = '';
+                document.getElementById('distance').value = '';
+                document.getElementById('notes').value = '';
             }
         }
 
-        function showLocationSuggestions(query, container) {
-            if (!query || query.length < 2) {
-                container.style.display = 'none';
+        async function loadUserTrips() {
+            const tbody = document.querySelector('#user-trips-table tbody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
+            
+            const { data: trips, error } = await supabase
+                .from('trips')
+                .select('*, drivers(name, phone)')
+                .eq('user_id', currentUser.id)
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Error loading trips</td></tr>';
                 return;
             }
             
-            // Location suggestions for Katete area
-            const locations = [
-                "Katete Town Center",
-                "St. Francis Hospital",
-                "Katete Market",
-                "Bus Station",
-                "Police Station",
-                "Secondary School",
-                "Post Office",
-                "Community Hall"
-            ];
-            
-            const filtered = locations.filter(loc => 
-                loc.toLowerCase().includes(query.toLowerCase())
-            );
-            
-            container.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                container.style.display = 'none';
+            if (trips.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No trips found</td></tr>';
                 return;
             }
             
-            filtered.forEach(loc => {
-                const suggestion = document.createElement('div');
-                suggestion.className = 'location-suggestion';
-                suggestion.textContent = loc;
-                suggestion.addEventListener('click', function() {
-                    container.previousElementSibling.value = loc;
-                    container.style.display = 'none';
-                    updateFare();
-                });
-                container.appendChild(suggestion);
+            tbody.innerHTML = '';
+            trips.forEach(trip => {
+                const row = document.createElement('tr');
+                
+                let driverInfo = 'Not assigned';
+                if (trip.driver_id && trip.drivers) {
+                    driverInfo = `${trip.drivers.name} (${trip.drivers.phone})`;
+                }
+                
+                row.innerHTML = `
+                    <td>${trip.item_name}</td>
+                    <td>${trip.pickup_location}</td>
+                    <td>${trip.destination}</td>
+                    <td><span class="status-badge status-${trip.status.replace(' ', '')}">${trip.status}</span></td>
+                    <td>${driverInfo}</td>
+                    <td>$${trip.total_price.toFixed(2)}</td>
+                    <td>${new Date(trip.created_at).toLocaleDateString()}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Driver Dashboard Functions
+        function showAvailableTrips() {
+            document.getElementById('available-trips-section').style.display = 'block';
+            document.getElementById('earnings-section').style.display = 'none';
+            loadAvailableTrips();
+        }
+
+        function showEarnings() {
+            document.getElementById('available-trips-section').style.display = 'none';
+            document.getElementById('earnings-section').style.display = 'block';
+            loadDriverEarnings();
+        }
+
+        async function loadAvailableTrips() {
+            const tbody = document.querySelector('#available-trips-table tbody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
+            
+            const { data: trips, error } = await supabase
+                .from('trips')
+                .select('*')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Error loading trips</td></tr>';
+                return;
+            }
+            
+            if (trips.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No available trips</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            trips.forEach(trip => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${trip.item_name}</td>
+                    <td>${trip.pickup_location}</td>
+                    <td>${trip.destination}</td>
+                    <td>${trip.distance_km} km</td>
+                    <td>$${trip.total_price.toFixed(2)}</td>
+                    <td>${new Date(trip.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm accept-trip-btn" data-trip-id="${trip.id}">Accept</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
             });
             
-            container.style.display = 'block';
+            // Add event listeners to accept buttons
+            document.querySelectorAll('.accept-trip-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tripId = this.getAttribute('data-trip-id');
+                    acceptTrip(tripId);
+                });
+            });
         }
 
-        function updateFare() {
-            const pickup = document.getElementById('pickup').value;
-            const dropoff = document.getElementById('dropoff').value;
-            const rideType = document.getElementById('rideType').value;
+        async function acceptTrip(tripId) {
+            const { data, error } = await supabase
+                .from('trips')
+                .update({ 
+                    driver_id: currentUser.id,
+                    status: 'accepted'
+                })
+                .eq('id', tripId);
             
-            if (!pickup || !dropoff) {
-                elements.fareAmount.textContent = '-- ZMW';
-                elements.fareDetails.textContent = 'Enter locations to see fare estimate';
+            if (error) {
+                alert('Error accepting trip: ' + error.message);
+            } else {
+                alert('Trip accepted successfully!');
+                loadAvailableTrips();
+            }
+        }
+
+        async function loadDriverEarnings() {
+            // Get settings first to calculate earnings
+            if (!settings) {
+                const { data, error } = await supabase
+                    .from('settings')
+                    .select('*')
+                    .single();
+                    
+                if (error) {
+                    console.error('Error fetching settings:', error);
+                    return;
+                }
+                
+                settings = data;
+            }
+            
+            document.getElementById('commission-rate').textContent = (settings.commission_percentage * 100).toFixed(1);
+            
+            const tbody = document.querySelector('#driver-trips-table tbody');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Loading...</td></tr>';
+            
+            const { data: trips, error } = await supabase
+                .from('trips')
+                .select('*')
+                .eq('driver_id', currentUser.id)
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Error loading trips</td></tr>';
                 return;
             }
             
-            // Calculate distance (simulated)
-            const distance = calculateDistance(pickup, dropoff);
+            if (trips.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No trips found</td></tr>';
+                return;
+            }
             
-            // Calculate fare based on distance
-            let fare = distance * 5; // Base fare of 5 ZMW per km
+            tbody.innerHTML = '';
+            let totalEarnings = 0;
             
-            // Apply ride type multiplier
-            if (rideType === 'premium') fare *= 1.5;
-            if (rideType === 'delivery') fare *= 1.2;
+            trips.forEach(trip => {
+                const earnings = trip.total_price * settings.commission_percentage;
+                totalEarnings += earnings;
+                
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${trip.item_name}</td>
+                    <td>${trip.pickup_location}</td>
+                    <td>${trip.destination}</td>
+                    <td><span class="status-badge status-${trip.status.replace(' ', '')}">${trip.status}</span></td>
+                    <td>$${trip.total_price.toFixed(2)}</td>
+                    <td>$${earnings.toFixed(2)}</td>
+                    <td>${new Date(trip.created_at).toLocaleDateString()}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
             
-            // Round to nearest whole number
-            fare = Math.round(fare);
-            
-            // Calculate approximate time
-            const time = Math.round(distance * 3); // Rough estimate: 3 minutes per km
-            
-            // Update display
-            elements.fareAmount.textContent = `${fare} ZMW`;
-            elements.fareDetails.textContent = `Distance: ${distance.toFixed(1)} km • Time: ${time} min`;
+            document.getElementById('total-earnings').textContent = totalEarnings.toFixed(2);
         }
 
-        function calculateDistance(origin, destination) {
-            // In a real app, this would use a distance calculation API
-            // For simulation, return a fixed distance based on locations
-            if (origin.includes("Town Center") && destination.includes("Hospital")) return 4.2;
-            if (origin.includes("Town Center") && destination.includes("Market")) return 1.5;
-            if (origin.includes("Town Center") && destination.includes("Bus Station")) return 2.8;
-            return (Math.random() * 8 + 2); // Fallback random distance
+        // Admin Dashboard Functions
+        function showDriverManagement() {
+            document.getElementById('driver-management-section').style.display = 'block';
+            document.getElementById('settings-management-section').style.display = 'none';
+            document.getElementById('all-trips-section').style.display = 'none';
+            loadPendingDrivers();
         }
 
-        function startRideProcess() {
-            // Update UI
-            elements.bookingCard.style.display = 'none';
-            elements.rideStatus.style.display = 'block';
-            appState.rideStatus = 'searching';
-            
-            // Start timer
-            startTimer();
-            
-            // Simulate finding a driver
-            setTimeout(() => {
-                simulateDriverAssignment();
-            }, 3000);
+        function showSettingsManagement() {
+            document.getElementById('driver-management-section').style.display = 'none';
+            document.getElementById('settings-management-section').style.display = 'block';
+            document.getElementById('all-trips-section').style.display = 'none';
+            loadSettings();
         }
 
-        async function simulateDriverAssignment() {
-            // Find an available driver
+        function showAllTrips() {
+            document.getElementById('driver-management-section').style.display = 'none';
+            document.getElementById('settings-management-section').style.display = 'none';
+            document.getElementById('all-trips-section').style.display = 'block';
+            loadAllTrips();
+        }
+
+        async function loadPendingDrivers() {
+            const tbody = document.querySelector('#pending-drivers-table tbody');
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Loading...</td></tr>';
+            
             const { data: drivers, error } = await supabase
                 .from('drivers')
                 .select('*')
-                .eq('status', 'approved')
-                .eq('available', true)
-                .limit(1);
-            
-            if (error) {
-                console.error('Error finding drivers:', error);
-                return;
-            }
-            
-            if (drivers && drivers.length > 0) {
-                const driver = drivers[0];
-                
-                // Update ride with driver assignment
-                const { error } = await supabase
-                    .from('rides')
-                    .update({ 
-                        driver_id: driver.user_id,
-                        status: 'assigned'
-                    })
-                    .eq('id', appState.currentRide.id);
-                
-                if (error) {
-                    showNotification(error.message, "error");
-                    return;
-                }
-                
-                appState.currentDriver = driver;
-                updateDriverAssignedUI(driver);
-                updateRideStatus('assigned');
-                
-                // Update driver availability
-                await supabase
-                    .from('drivers')
-                    .update({ available: false })
-                    .eq('user_id', driver.user_id);
-                
-                // Simulate driver arriving
-                setTimeout(() => {
-                    updateRideStatus('pickup');
-                }, 5000);
-            } else {
-                showNotification("No drivers available at the moment. Please try again later.", "error");
-                cancelRide();
-            }
-        }
-
-        function updateDriverAssignedUI(driver) {
-            elements.driverName.textContent = driver.name;
-            elements.driverRating.textContent = driver.rating || '5.0';
-            elements.driverRides.textContent = driver.total_rides || 0;
-            elements.driverPlate.textContent = driver.vehicle_plate;
-            elements.rateDriverName.textContent = driver.name;
-            elements.driverAssigned.style.display = 'flex';
-        }
-
-        function updateRideStatus(status) {
-            appState.rideStatus = status;
-            
-            switch(status) {
-                case 'assigned':
-                    elements.statusText.textContent = 'Driver assigned';
-                    elements.step2.classList.add('completed');
-                    elements.step3.classList.add('active');
-                    
-                    // Update ETA
-                    updateETA(5);
-                    break;
-                    
-                case 'pickup':
-                    elements.statusText.textContent = 'Driver arriving';
-                    elements.step3.classList.add('completed');
-                    elements.step4.classList.add('active');
-                    
-                    // Update ETA
-                    updateETA(2);
-                    
-                    // Simulate ride completion
-                    setTimeout(() => {
-                        completeRide();
-                    }, 8000);
-                    break;
-            }
-        }
-
-        async function completeRide() {
-            if (appState.currentRide) {
-                // Update ride status to completed
-                const { error } = await supabase
-                    .from('rides')
-                    .update({ status: 'completed' })
-                    .eq('id', appState.currentRide.id);
-                
-                if (error) {
-                    showNotification(error.message, "error");
-                    return;
-                }
-                
-                // Update driver stats
-                if (appState.currentDriver) {
-                    const { error: driverError } = await supabase
-                        .from('drivers')
-                        .update({ 
-                            total_rides: (appState.currentDriver.total_rides || 0) + 1,
-                            available: true
-                        })
-                        .eq('user_id', appState.currentDriver.user_id);
-                    
-                    if (driverError) {
-                        console.error('Error updating driver stats:', driverError);
-                    }
-                }
-            }
-            
-            clearInterval(appState.timer);
-            elements.rideStatus.style.display = 'none';
-            elements.ratingSection.style.display = 'block';
-            appState.rideStatus = 'completed';
-            
-            // Show completion message
-            showNotification("Ride completed! Please rate your driver.", "success");
-        }
-
-        function cancelRide() {
-            clearInterval(appState.timer);
-            resetApp();
-            showNotification("Ride cancelled", "info");
-        }
-
-        function resetApp() {
-            appState.rideStatus = 'idle';
-            appState.timerSeconds = 0;
-            appState.selectedRating = 0;
-            appState.currentRide = null;
-            appState.currentDriver = null;
-            
-            // Reset UI
-            elements.bookingCard.style.display = 'block';
-            elements.rideStatus.style.display = 'none';
-            elements.ratingSection.style.display = 'none';
-            elements.chatContainer.style.display = 'none';
-            elements.driverAssigned.style.display = 'none';
-            
-            // Reset timeline
-            elements.step1.classList.add('completed');
-            elements.step2.classList.remove('completed');
-            elements.step2.classList.add('active');
-            elements.step3.classList.remove('completed', 'active');
-            elements.step4.classList.remove('completed', 'active');
-            
-            // Reset stars
-            elements.stars.forEach(star => star.classList.remove('active'));
-            elements.reviewText.value = '';
-        }
-
-        function startTimer() {
-            appState.timerSeconds = 0;
-            updateTimerDisplay();
-            
-            appState.timer = setInterval(() => {
-                appState.timerSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(appState.timerSeconds / 60);
-            const seconds = appState.timerSeconds % 60;
-            elements.timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function updateETA(minutes) {
-            elements.etaValue.textContent = `${minutes} min`;
-        }
-
-        async function updateDriverDashboard() {
-            if (!appState.user || appState.user.user_metadata?.role !== 'driver') return;
-            
-            // Load driver's ride requests
-            const { data: rideRequests, error } = await supabase
-                .from('rides')
-                .select('*')
-                .eq('status', 'requested')
-                .order('created_at', { ascending: true });
-            
-            if (error) {
-                console.error('Error loading ride requests:', error);
-                return;
-            }
-            
-            // Load driver's today rides
-            const today = new Date().toISOString().split('T')[0];
-            const { data: todayRides, error: todayError } = await supabase
-                .from('rides')
-                .select('*')
-                .eq('driver_id', appState.user.id)
-                .gte('created_at', today)
+                .eq('approved', false)
                 .order('created_at', { ascending: false });
             
-            if (todayError) {
-                console.error('Error loading today rides:', todayError);
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Error loading drivers</td></tr>';
                 return;
             }
             
-            // Update driver ride history
-            elements.driverRideHistory.innerHTML = '';
+            if (drivers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No pending driver requests</td></tr>';
+                return;
+            }
             
-            if (todayRides && todayRides.length > 0) {
-                todayRides.forEach(ride => {
-                    const rideCard = document.createElement('div');
-                    rideCard.className = 'history-card';
-                    
-                    const statusClass = ride.status === 'completed' ? 'status-approved' : 
-                                      ride.status === 'cancelled' ? 'status-rejected' : 'status-pending';
-                    
-                    const statusText = ride.status === 'completed' ? 'Completed' : 
-                                     ride.status === 'cancelled' ? 'Cancelled' : 'In Progress';
-                    
-                    rideCard.innerHTML = `
-                        <div class="history-header">
-                            <h4>${ride.pickup_location} → ${ride.dropoff_location}</h4>
-                            <span class="fare-amount">${ride.fare} ZMW</span>
-                        </div>
-                        <div class="history-route">
-                            <i class="fas fa-calendar"></i> ${new Date(ride.created_at).toLocaleDateString()} • 
-                            <i class="fas fa-clock"></i> ${new Date(ride.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                        </div>
-                        <div class="history-details">
-                            <span>${ride.ride_type}</span>
-                            <span class="status-badge ${statusClass}">${statusText}</span>
-                        </div>
-                    `;
-                    
-                    elements.driverRideHistory.appendChild(rideCard);
+            tbody.innerHTML = '';
+            drivers.forEach(driver => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${driver.name}</td>
+                    <td>${driver.phone}</td>
+                    <td>${driver.bike_details}</td>
+                    <td>${new Date(driver.created_at).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-success btn-sm approve-driver-btn" data-driver-id="${driver.id}">Approve</button>
+                        <button class="btn btn-danger btn-sm reject-driver-btn" data-driver-id="${driver.id}">Reject</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners to approve/reject buttons
+            document.querySelectorAll('.approve-driver-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const driverId = this.getAttribute('data-driver-id');
+                    approveDriver(driverId, true);
                 });
+            });
+            
+            document.querySelectorAll('.reject-driver-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const driverId = this.getAttribute('data-driver-id');
+                    approveDriver(driverId, false);
+                });
+            });
+        }
+
+        async function approveDriver(driverId, approved) {
+            const { data, error } = await supabase
+                .from('drivers')
+                .update({ approved: approved })
+                .eq('id', driverId);
+            
+            if (error) {
+                alert('Error updating driver: ' + error.message);
             } else {
-                elements.driverRideHistory.innerHTML = '<p style="text-align: center; color: var(--gray);">No rides today</p>';
+                alert(`Driver ${approved ? 'approved' : 'rejected'} successfully!`);
+                loadPendingDrivers();
             }
         }
 
-        function showNotification(message, type) {
-            // Create notification element
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: 20px;
-                background: ${type === 'success' ? '#2ecc71' : type === 'error' ? '#e74c3c' : '#3498db'};
-                color: white;
-                padding: 1rem 1.5rem;
-                border-radius: 10px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 10000;
-                max-width: 300px;
-                transform: translateX(400px);
-                transition: transform 0.3s ease;
-            `;
-            notification.textContent = message;
+        async function loadSettings() {
+            const { data, error } = await supabase
+                .from('settings')
+                .select('*')
+                .single();
+                
+            if (error) {
+                console.error('Error fetching settings:', error);
+                return;
+            }
             
-            document.body.appendChild(notification);
+            settings = data;
             
-            // Animate in
+            document.getElementById('price-per-km').value = settings.price_per_km;
+            document.getElementById('commission-percentage').value = settings.commission_percentage * 100;
+        }
+
+        async function handleSaveSettings() {
+            const pricePerKm = parseFloat(document.getElementById('price-per-km').value);
+            const commissionPercentage = parseFloat(document.getElementById('commission-percentage').value) / 100;
+            
+            if (!pricePerKm || !commissionPercentage) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const { data, error } = await supabase
+                .from('settings')
+                .update({
+                    price_per_km: pricePerKm,
+                    commission_percentage: commissionPercentage
+                })
+                .eq('id', settings.id);
+            
+            if (error) {
+                alert('Error saving settings: ' + error.message);
+            } else {
+                alert('Settings saved successfully!');
+                settings = { ...settings, price_per_km: pricePerKm, commission_percentage: commissionPercentage };
+            }
+        }
+
+        async function loadAllTrips() {
+            const tbody = document.querySelector('#all-trips-table tbody');
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Loading...</td></tr>';
+            
+            const { data: trips, error } = await supabase
+                .from('trips')
+                .select('*, drivers(name), users(email)')
+                .order('created_at', { ascending: false });
+            
+            if (error) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Error loading trips</td></tr>';
+                return;
+            }
+            
+            if (trips.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No trips found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            trips.forEach(trip => {
+                const row = document.createElement('tr');
+                
+                let driverName = 'Not assigned';
+                if (trip.driver_id && trip.drivers) {
+                    driverName = trip.drivers.name;
+                }
+                
+                row.innerHTML = `
+                    <td>${trip.item_name}</td>
+                    <td>${trip.users?.email || 'Unknown'}</td>
+                    <td>${trip.pickup_location}</td>
+                    <td>${trip.destination}</td>
+                    <td>${driverName}</td>
+                    <td><span class="status-badge status-${trip.status.replace(' ', '')}">${trip.status}</span></td>
+                    <td>$${trip.total_price.toFixed(2)}</td>
+                    <td>${new Date(trip.created_at).toLocaleDateString()}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Setup functions for each dashboard
+        function setupUserDashboard() {
+            // Initial setup for user dashboard
+            document.getElementById('create-delivery-section').style.display = 'none';
+            document.getElementById('my-trips-section').style.display = 'none';
+        }
+
+        function setupDriverDashboard() {
+            // Initial setup for driver dashboard
+            document.getElementById('available-trips-section').style.display = 'none';
+            document.getElementById('earnings-section').style.display = 'none';
+        }
+
+        function setupAdminDashboard() {
+            // Initial setup for admin dashboard
+            document.getElementById('driver-management-section').style.display = 'none';
+            document.getElementById('settings-management-section').style.display = 'none';
+            document.getElementById('all-trips-section').style.display = 'none';
+        }
+
+        // Utility Functions
+        function showAlert(alertDiv, message, type) {
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.classList.remove('hidden');
+            
             setTimeout(() => {
-                notification.style.transform = 'translateX(0)';
-            }, 10);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                notification.style.transform = 'translateX(400px)';
-                setTimeout(() => {
-                    if (document.body.contains(notification)) {
-                        document.body.removeChild(notification);
-                    }
-                }, 300);
-            }, 3000);
+                alertDiv.classList.add('hidden');
+            }, 5000);
         }
     </script>
 </body>
